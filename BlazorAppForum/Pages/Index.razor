@@ -24,7 +24,7 @@
     </ChildContentTRUE>
     <ChildContentFALSE>
         
-        
+        You are not log-in please log-in
         
     </ChildContentFALSE>
 </AuthCheck>
@@ -34,6 +34,8 @@
 
 
 @code {
+    //TODO add on index forum view list of posts and click on them to see details etc 
+    
 
     [CascadingParameter]
     public Task<AuthenticationState> AuthState { get; set; } = null!;
