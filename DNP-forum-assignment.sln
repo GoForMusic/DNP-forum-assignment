@@ -2,6 +2,10 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorAppForum", "BlazorAppForum\BlazorAppForum.csproj", "{4F766EA1-6D87-443E-B8F7-2828077F34C5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{1D75838A-FDC6-4B40-BF0C-631A1E810E6C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileData", "FileData\FileData.csproj", "{88CA4B1A-D992-4807-B426-18F3AB51F47A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +16,13 @@ Global
 		{4F766EA1-6D87-443E-B8F7-2828077F34C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4F766EA1-6D87-443E-B8F7-2828077F34C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4F766EA1-6D87-443E-B8F7-2828077F34C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D75838A-FDC6-4B40-BF0C-631A1E810E6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D75838A-FDC6-4B40-BF0C-631A1E810E6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D75838A-FDC6-4B40-BF0C-631A1E810E6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D75838A-FDC6-4B40-BF0C-631A1E810E6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88CA4B1A-D992-4807-B426-18F3AB51F47A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88CA4B1A-D992-4807-B426-18F3AB51F47A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88CA4B1A-D992-4807-B426-18F3AB51F47A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88CA4B1A-D992-4807-B426-18F3AB51F47A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

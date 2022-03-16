@@ -1,9 +1,57 @@
 @page "/"
+@using System.Security.Claims
+@using Domain.Contracts
+@using Domain.Models
+@using UIElements
+@attribute [Authorize]
+@inject IUserService UserService;
 
-<PageTitle>Index</PageTitle>
 
-<h1>Hello, world!</h1>
 
-Welcome to your new app.
+<AuthCheck Condition="@(_user.Role.Equals("Admin"))">
+    <ChildContentTRUE>
+        
+        Welcome to best forum.com @_user.UserName
+        User details:
+        @_user.UserName
+        @_user.City
+        @_user.Password
+        @_user.Role
+        @_user.BirthDate
+        @_user.SecurityLevel
+        
+        <SurveyPrompt Title="How is Blazor working for you?"/>
+    </ChildContentTRUE>
+    <ChildContentFALSE>
+        
+        
+        
+    </ChildContentFALSE>
+</AuthCheck>
 
-<SurveyPrompt Title="How is Blazor working for you?"/>
+
+
+
+
+@code {
+
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthState { get; set; } = null!;
+
+    private User? _user;
+    //User object
+    private string? roleTest;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        AuthenticationState authState = await AuthState;
+        ClaimsPrincipal user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            //get user clas base on the user identity
+            _user = await UserService.GetUserAsync(user.Identity.Name);
+        }
+    }
+
+}
