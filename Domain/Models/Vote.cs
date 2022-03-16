@@ -2,6 +2,7 @@
 
 public class Vote
 {
+    public int Id { get; set; }
     public short Value { get; set; }
     public User Voter { get; set; }
 

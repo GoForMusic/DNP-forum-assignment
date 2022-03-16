@@ -52,7 +52,7 @@
         if (user.Identity.IsAuthenticated)
         {
             //get user clas base on the user identity
-            _user = await UserService.GetUserAsync(user.Identity.Name);
+            _user = await UserService.GetUser(user.Identity.Name);
         }
     }
 

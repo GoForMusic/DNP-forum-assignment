@@ -12,9 +12,11 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
 //add scopes
+builder.Services.AddScoped<FileContext>();
 builder.Services.AddScoped<AuthenticationStateProvider, SimpleAuthenticationStateProvider>();
 builder.Services.AddScoped<IAuthService, AuthServiceImpl>();
-builder.Services.AddScoped<IUserService, InMemoryUserService>();
+builder.Services.AddScoped<IUserService, FileDataDAO>();
+builder.Services.AddScoped<ISubForumService, FileDataDAO>();
 
 
 var app = builder.Build();

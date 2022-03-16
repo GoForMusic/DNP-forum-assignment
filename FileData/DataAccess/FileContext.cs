@@ -5,26 +5,26 @@ namespace FileData.DataAccess;
 
 public class FileContext
 {
-    private string todoFilePath = "forum.json";
+    private string forumFilePath = "forum.json";
 
-    private ICollection<Forum>? _forums;
+    private Forum? forum;
 
-    public ICollection<Forum> Forums
+    public Forum Forum
     {
         get
         {
-            if (_forums == null)
+            if (forum == null)
             {
                 LoadData();
             }
 
-            return _forums!;
+            return forum!;
         }
     }
 
     public FileContext()
     {
-        if (!File.Exists(todoFilePath))
+        if (!File.Exists(forumFilePath))
         {
             Seed();
         }
@@ -32,21 +32,41 @@ public class FileContext
 
     private void Seed()
     {
-        
-        
+        forum = new Forum();
+        User[] users =
+        {
+            new User
+            {
+                Id= 0, UserName = "admin", Password = "adrian1234", City = "Horsens", BirthDate = new DateTime(1998,12,26),Role = "Admin", SecurityLevel = 2
+            },
+            new User{
+                Id= 1, UserName = "user", Password = "adrian1234", City = "Horsens2", BirthDate = new DateTime(1998,12,26),Role = "User", SecurityLevel = 1
+            }
+        };
+            SubForum[] ts =
+        {
+            new SubForum
+            {
+                Id=0, Description = "Testing something about subForum", Title = "Test"
+            }
+        };
+
+
+            forum.Users = users.ToList();
+            forum.SubForums = ts.ToList();
         SaveChanges();
     }
 
     public void SaveChanges()
     {
-        string serialize = JsonSerializer.Serialize(Forums);
-        File.WriteAllText(todoFilePath, serialize);
-        _forums = null;
+        string serialize = JsonSerializer.Serialize(Forum);
+        File.WriteAllText(forumFilePath, serialize);
+        forum = null;
     }
 
     private void LoadData()
     {
-        string content = File.ReadAllText(todoFilePath);
-        _forums = JsonSerializer.Deserialize<List<Forum>>(content);
+        string content = File.ReadAllText(forumFilePath);
+        forum = JsonSerializer.Deserialize<Forum>(content);
     }
 }
