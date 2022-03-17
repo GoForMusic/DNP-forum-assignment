@@ -1,4 +1,11 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@using Domain.Contracts
+@using Domain.Models
+@using System.Security.Claims
+@using subforum
+@inject ISubForumService _forumService;
+@inject NavigationManager Navigation
+
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">BlazorAppForum</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
@@ -11,19 +18,24 @@
     <nav class="flex-column">
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
+                Home <span class="oi oi-home nav-image" aria-hidden="true"></span>
             </NavLink>
         </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> Counter
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="fetchdata">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
-            </NavLink>
-        </div>
+        @foreach (var item in _subForums)
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" @onclick="@(() => Navigation.NavigateTo("/subforum/"+item.Id))">
+                    @item.Title <span class="oi oi-list-rich nav-image" aria-hidden="true"></span>
+                </NavLink>
+            </div>
+        }
+        <AuthorizeView Policy="Admin">
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="fetchdata">
+                    Admin Panel <span class="oi oi-wrench nav-image" aria-hidden="true"></span>
+                </NavLink>
+            </div>
+        </AuthorizeView>
     </nav>
 </div>
 
@@ -35,6 +47,23 @@
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+    }
+
+}
+
+@code {
+
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthState { get; set; } = null!;
+
+    private User? _user;
+    //User object
+    private string? roleTest;
+    private ICollection<SubForum>? _subForums;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _subForums = await _forumService.GetSubForumAsync();
     }
 
 }

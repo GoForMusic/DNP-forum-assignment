@@ -19,6 +19,22 @@ builder.Services.AddScoped<IUserService, FileDataDAO>();
 builder.Services.AddScoped<ISubForumService, FileDataDAO>();
 
 
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Admin",
+        pb =>
+            pb.RequireAuthenticatedUser().RequireClaim("Role", "Admin"));
+
+    options.AddPolicy("User",
+        a => 
+            a.RequireAuthenticatedUser().RequireClaim("Role", "User"));
+    
+    options.AddPolicy("SubForumAdmin",
+        a => 
+            a.RequireAuthenticatedUser().RequireClaim("Role", "SubForumAdmin"));
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

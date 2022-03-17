@@ -2,32 +2,19 @@
 @using System.Security.Claims
 @using Domain.Contracts
 @using Domain.Models
-@using UIElements
+
 @attribute [Authorize]
-@inject IUserService UserService;
+@inject IUserService _userService;
 
 
-
-<AuthCheck Condition="@(_user.Role.Equals("Admin"))">
-    <ChildContentTRUE>
-        
         Welcome to best forum.com @_user.UserName
         User details:
+        @_user.Id
         @_user.UserName
         @_user.City
         @_user.Password
         @_user.Role
         @_user.BirthDate
-        @_user.SecurityLevel
-        
-        <SurveyPrompt Title="How is Blazor working for you?"/>
-    </ChildContentTRUE>
-    <ChildContentFALSE>
-        
-        You are not log-in please log-in
-        
-    </ChildContentFALSE>
-</AuthCheck>
 
 
 
@@ -52,7 +39,7 @@
         if (user.Identity.IsAuthenticated)
         {
             //get user clas base on the user identity
-            _user = await UserService.GetUser(user.Identity.Name);
+            _user = await _userService.GetUser(user.Identity.Name);
         }
     }
 

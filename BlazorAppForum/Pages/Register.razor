@@ -1,0 +1,78 @@
+﻿@page "/Register"
+@using Microsoft.AspNetCore.Components
+@using Domain.Models
+@using Domain.Contracts
+
+@inject IUserService _userService;
+@inject NavigationManager NavigationManager
+
+<AuthorizeView>
+    <NotAuthorized>
+        <div class="card">
+            <h3>Please register</h3>
+            <div class="field">
+                <label>User name:</label>
+                <input type="text" placeholder="user name" @bind-value="newUserItem.UserName" class="input-field"/>
+            </div>
+            <div class="field">
+                <label>Password:</label>
+                <input type="password" placeholder="password" @bind-value="newUserItem.Password" class="input-field"/>
+            </div>
+            <div class="field">
+                <label>City:</label>
+                <input type="text" placeholder="city" @bind-value="newUserItem.City" class="input-field"/>
+            </div>
+            <div class="field">
+                <label>Birth Date:</label>
+                <input type="date" placeholder="birthdate" @bind-value="today" class="input-field"/>
+            </div>
+            @if (!string.IsNullOrEmpty(errorMessage))
+                        {
+                            <div class="field">
+                                <label style="color: red">
+                                    @errorMessage
+                                </label>
+                            </div>
+                        }
+            <div class="field">
+                <button class="loginbtn" @onclick="RegisterAsync">Register in</button>
+            </div>
+            <div class="field">
+                <p>You arlready have an account? <a href="/Login">Login here</a></p>
+            </div>
+        </div>
+    </NotAuthorized>
+    <Authorized>
+        
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    private User? newUserItem= new User();
+    private DateTime today = DateTime.Today;
+    
+    private string? errorMessage;
+
+    private async Task RegisterAsync()
+    {
+        try
+        {
+            if (newUserItem.UserName == null || newUserItem.Password == null || newUserItem.City == null)
+            {
+                throw new Exception("All the fields are mandatory");
+            }else
+            {
+                newUserItem.Role = "User";
+                newUserItem.BirthDate = today;
+                await _userService.AddUser(newUserItem);
+                NavigationManager.NavigateTo("/");
+            }
+            
+                
+        }catch(Exception e)
+        {
+            errorMessage = $"Error: {e.Message}";
+        }
+    }
+
+}

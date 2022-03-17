@@ -1,0 +1,51 @@
+﻿@page "/{Id}"
+@using Domain.Models
+@using Domain.Contracts
+
+@inject ISubForumService _subForumService
+@inject NavigationManager Navigation
+
+@namespace subforum
+
+@if (_postsCollection  == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+
+{@foreach (var item in _postsCollection)
+{
+    <article class="media content-section">
+        <div class="media-body">
+            <div class="article-metadata">
+                <a class="mr-2" href="#">
+                    @item.WrittenBy.UserName
+                </a>
+                <small class="text-muted">@String.Format("{0:MM/dd/yyyy dt:hh:mm tt}", item.date_posted)</small>
+            </div>
+            <h2><a class="article-title" @onclick="@(() => Navigation.NavigateTo("/"+subForum.Id+"/post/"+item.Id))">@item.Header</a></h2>
+            <p class="article-content">@item.Body</p>
+        </div>
+    </article>
+}
+}
+
+@code {
+    
+    [Parameter]
+    public string Id { get; set; }
+    
+    private string errorLabel=String.Empty;
+    private ICollection<Post>? _postsCollection;
+
+    SubForum? subForum;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        Domain.Models.SubForum subForum = await _subForumService.GetSubForumByID(Id);
+        _postsCollection = subForum.Posts;
+    }
+    
+}

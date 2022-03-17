@@ -99,8 +99,7 @@ public class AuthServiceImpl : IAuthService
             new Claim(ClaimTypes.Name, user.UserName),
             new Claim("Role", user.Role),
             new Claim("City", user.City),
-            new Claim("BirthDate", user.BirthDate.ToString()),
-            new Claim("SecurityLevel", user.SecurityLevel.ToString())
+            new Claim("BirthDate", user.BirthDate.ToString())
         };
 
         return new ClaimsIdentity(claims, "apiauth_type");
