@@ -8,38 +8,74 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
 
+
 <AuthorizeView>
     <NotAuthorized>
-        <div class="card">
-            <h3>Please login</h3>
-            <div class="field">
-                <label>User name:</label>
-                <input type="text" @bind="userName"/>
-            </div>
-            <div class="field">
-                <label style="text-align: center">Password:</label>
-                <input type="password" @bind="password"/>
-            </div>
-            @if (!string.IsNullOrEmpty(errorLabel))
-            {
-                <div class="field">
-                    <label style="color: red">
-                        @errorLabel
-                    </label>
+
+
+        <main class="login-form">
+            <div class="cotainer">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">Login</div>
+                            <div class="card-body">
+                                <form>
+                                    
+                                    <div class="form-group row">
+                                        <label for="email_address" class="col-md-4 col-form-label text-md-right">Username</label>
+                                        <div class="col-md-6">
+                                            <input type="text" id="email_address" @bind="userName" class="form-control" name="email-address" required autofocus>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label for="password" class="col-md-4 col-form-label text-md-right">Password</label>
+                                        <div class="col-md-6">
+                                            <input type="password" id="password" @bind="password" class="form-control" name="password" required autofocus>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <div class="col-md-6 offset-md-4">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" name="remember"> Remember Me
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 offset-md-4">
+                                        <button type="submit" class="btn btn-primary" @onclick="LoginAsync">
+                                            Login
+                                        </button>
+                                        <a href="/Register" class="btn btn-link">
+                                            You really want to see our secrets?
+                                        </a>
+                                    </div>
+                                    <div class="col-md-6 offset-md-4">
+
+                                        @if (!string.IsNullOrEmpty(errorLabel))
+                                        {
+                                            <span class="help-block" style="color: red">@errorLabel</span>
+                                        }
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            }
-            <div class="field">
-                <button class="loginbtn" @onclick="LoginAsync">Log in</button>
             </div>
-            <div class="field">
-                <p>You want to see our bestial forum? <a href="/Register">Register here</a></p>
-            </div>
-        </div>
+        </main>
+
+
     </NotAuthorized>
     <Authorized>
-        
     </Authorized>
 </AuthorizeView>
+
+
 
 @code {
     private string userName;
@@ -51,8 +87,15 @@
         errorLabel = "";
         try
         {
-            await authService.LoginAsync(userName, password);
-            navMgr.NavigateTo("/");
+            if (userName == null || password == null)
+            {
+                throw new Exception("All the fields are required!");
+            }
+            else
+            {
+                await authService.LoginAsync(userName, password);
+                navMgr.NavigateTo("/");
+            }
         }
         catch (Exception e)
         {

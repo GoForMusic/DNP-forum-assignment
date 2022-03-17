@@ -1,0 +1,116 @@
+﻿@page "/subforum/{Id}/AddPost"
+@using Domain.Models
+@using Domain.Contracts
+@using System.Security.Claims
+
+@inject ISubForumService _subForumService;
+@inject IUserService _userService
+@inject NavigationManager Navigation
+
+@attribute [Authorize]
+
+<main class="login-form">
+            <div class="container-fluid">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">AddPost</div>
+                            <div class="card-body">
+                                <div class="form-group row">
+                                        <label for="email_address" class="col-md-4 col-form-label text-md-right">Title</label>
+                                        <div class="col-md-6">
+                                            <input type="text" id="title" @bind="_post.Header" class="form-control" name="title" required autofocus>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="password" class="col-md-4 col-form-label text-md-right">Description</label>
+                                        <div class="col-md-6">
+                                            <textarea id="editor" rows="5" class="form-control" @bind="_post.Body"></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 offset-md-4">
+                                        <button class="btn btn-primary" @onclick="CreatePostAsync">
+                                            Create
+                                        </button>
+                                    </div>
+                                    <div class="col-md-6 offset-md-4">
+
+                                        @if (!string.IsNullOrEmpty(errorLabel))
+                                        {
+                                            <span class="help-block" style="color: red">@errorLabel</span>
+                                        }
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+
+@code {
+
+    private string? titlePost;
+    private string? contectPost;
+    
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthState { get; set; } = null!;
+    
+    [Parameter]
+    public string Id { get; set; }
+    
+    private string errorLabel=String.Empty;
+
+    private Post? _post = new Post();
+    private SubForum? subForum;
+    private User? _user;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            subForum = await _subForumService.GetSubForumByID(Id);
+
+            AuthenticationState authState = await AuthState;
+            ClaimsPrincipal user = authState.User;
+
+            if (user.Identity.IsAuthenticated)
+            {
+    //get user clas base on the user identity
+                _user = await _userService.GetUser(user.Identity.Name);
+            }
+        }
+        catch (Exception e)
+        {
+            errorLabel = $"Error: {e.Message}";
+        }
+
+    }
+
+    private async Task CreatePostAsync()
+    {
+        try
+        {
+            if (_post.Header == null || _post.Body == null)
+            {
+                throw new Exception("All the fields are mandatory");
+            }
+            else
+            {
+                _post.Id = RandomIDGenerator.Generate(20);
+                _post.WrittenBy = _user;
+                _post.date_posted = DateTime.Today;
+                subForum = await _subForumService.GetSubForumByID(Id);
+                subForum.Posts.Add(_post);
+            
+                await _subForumService.UpdateSubForum(subForum);
+                Navigation.NavigateTo("/subforum/"+Id);
+            }
+        }
+        catch (Exception e)
+        {
+            errorLabel = $"Error: {e.Message}";
+        }
+    }
+}

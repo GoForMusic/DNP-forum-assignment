@@ -51,11 +51,11 @@ public class FileContext
         {
             new SubForum
             {
-                Id = RandomIDGenerator.Generate(20), Description = "Testing something about subForum", Title = "Gaming"
+                Id = RandomIDGenerator.Generate(20), Description = "Testing something about subForum", Title = "Gaming", Posts = new List<Post>(), OwnedBy = new User()
             },
             new SubForum()
             {
-                Id = RandomIDGenerator.Generate(20), Description = "Gaming dot this", Title = "Testing second"
+                Id = RandomIDGenerator.Generate(20), Description = "Gaming dot this", Title = "Testing second", Posts = new List<Post>(), OwnedBy = new User()
             }
         };
 

@@ -11,6 +11,13 @@
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css"/>
     <link href="css/site.css" rel="stylesheet"/>
     <link href="BlazorAppForum.styles.css" rel="stylesheet"/>
+    <link href="css/wysiwyg.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/highlight.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+    
+    
+    
+    
     <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered"/>
 </head>
 <body>
@@ -28,11 +35,18 @@
 </div>
 
 <script src="_framework/blazor.server.js"></script>
-<!-- Optional JavaScript -->
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="js/jquery.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote-bs4.js"></script>
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="js/popper.js"></script>
-<script src="js/bootstrap.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="js/wysiwyg.js"></script>
+    <script src="js/highlight.js"></script>
+<script type="text/javascript">
+            $(document).ready(function () {
+                $('#editor').wysiwyg({
+                    highlight: true,
+                    debug: true
+                });
+            });
+        </script>
 </body>
 </html>
