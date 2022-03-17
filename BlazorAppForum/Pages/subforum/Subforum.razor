@@ -48,6 +48,18 @@ else
                             </span>
                         </div>
                         <div class="px-4 pt-3">
+                            <AuthorizeView Policy="SubForumAdmin">
+                                <Authorized>
+                                    <button type="button" class="btn btn-warning" @onclick="@(() => Navigation.NavigateTo("/subforum/" + subForum.Id + "/post/" + item.Id))">
+                                        Edit
+                                    </button>
+                                    <button type="button" class="btn btn-danger" @onclick="@(() => Navigation.NavigateTo("/subforum/" + subForum.Id + "/post/" + item.Id))">
+                                        DELETE
+                                    </button>
+                                </Authorized>
+                                <NotAuthorized>
+                                </NotAuthorized>
+                            </AuthorizeView>
                             <button type="button" class="btn btn-primary" @onclick="@(() => Navigation.NavigateTo("/subforum/" + subForum.Id + "/post/" + item.Id))">
                                 Reply
                             </button>

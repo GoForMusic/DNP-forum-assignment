@@ -62,7 +62,7 @@
     
     private string errorLabel=String.Empty;
 
-    private Post? _post = new Post();
+    private Post? _post=new Post();
     private SubForum? subForum;
     private User? _user;
     
@@ -92,7 +92,7 @@
     {
         try
         {
-            if (_post.Header == null || _post.Body == null)
+            if (string.IsNullOrEmpty(_post.Header) || string.IsNullOrEmpty(_post.Body))
             {
                 throw new Exception("All the fields are mandatory");
             }
@@ -105,7 +105,7 @@
                 subForum.Posts.Add(_post);
             
                 await _subForumService.UpdateSubForum(subForum);
-                Navigation.NavigateTo("/subforum/"+Id);
+                Navigation.NavigateTo("/subforum/"+Id,true);
             }
         }
         catch (Exception e)
