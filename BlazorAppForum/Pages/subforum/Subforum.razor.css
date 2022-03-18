@@ -76,3 +76,48 @@ a {
     width: 40px;
     height: auto
 }
+.navbar-laravel
+{
+    box-shadow: 0 2px 4px rgba(0,0,0,.04);
+}
+
+.navbar-brand , .nav-link, .form-group, .login-form
+{
+    font-family: Raleway, sans-serif;
+}
+
+.form-group
+{
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+.form-group .row
+{
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.login-form
+{
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+
+.login-form .row
+{
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.filterscontainer{
+    display: flex;
+}
+
+.filter {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 5px;
+    text-align: center;
+}

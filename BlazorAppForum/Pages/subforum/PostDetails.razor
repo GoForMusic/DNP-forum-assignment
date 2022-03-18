@@ -1,0 +1,392 @@
+﻿@page "/subforum/{IdForum}/post/{IdPost}"
+
+@using Domain.Models
+@using Domain.Contracts
+@using UIElements
+@using System.Security.Claims
+
+@inject ISubForumService _subForumService
+@inject NavigationManager Navigation
+@inject IUserService _userService;
+
+<div class="container-fluid mt-100">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <div class="media flex-wrap w-100 align-items-center"> <img src="https://i.imgur.com/iNmBizf.jpg" class="d-block ui-w-40 rounded-circle" alt="">
+                            <div class="media-body ml-3"> <a href="javascript:void(0)" data-abc="true">@_post.WrittenBy.UserName</a>
+                                <div class="text-muted small">@_post.date_posted</div>
+                            </div>
+                            <div class="text-muted small ml-3">
+                                <div>@_post.Header</div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        @_post.Body
+                    </div>
+                    <div class="card-footer d-flex flex-wrap justify-content-between align-items-center px-0 pt-0 pb-3">
+                        <div class="px-4 pt-3">
+                            <a href="javascript:void(0)" class="text-muted d-inline-flex align-items-center align-middle" data-abc="true">
+                                 <image class="align-middle oi oi-thumb-up"></image>
+                            </a> 
+                            <span class="text-muted d-inline-flex align-items-center align-middle ml-4">
+                                 <span class="align-middle oi">@_post.Votes.Count</span>
+                            </span>
+                        </div>
+                        <div class="px-4 pt-3">
+                            <AuthorizeView Policy="SubForumAdmin">
+                                <Authorized>
+                                    <button type="button" class="btn btn-warning" @onclick="@(() => ShowEdit(_post))">
+                                        Edit
+                                    </button>
+                                    <button type="button" class="btn btn-danger" @onclick="@(() => removePost(_post))">
+                                        DELETE
+                                    </button>
+                                </Authorized>
+                                <NotAuthorized>
+                                </NotAuthorized>
+                            </AuthorizeView>
+                            <AuthorizeView>
+                                <Authorized>
+                                    @if (_post.WrittenBy.Id.Equals(_user.Id))
+                                    {
+                                        <button type="button" class="btn btn-warning" @onclick="@(() => ShowEdit(_post))">
+                                            Edit
+                                        </button>
+                                        <button type="button" class="btn btn-danger" @onclick="@(() => removePost(_post))">
+                                            DELETE
+                                        </button>
+                                    }
+                                </Authorized>
+                                <NotAuthorized>
+                                </NotAuthorized>
+                            </AuthorizeView>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!--Comments-->
+@foreach (var item in _comments)
+{
+    <div class="container-fluid mt-100">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <div class="media flex-wrap w-100 align-items-center"> <img src="https://i.imgur.com/iNmBizf.jpg" class="d-block ui-w-40 rounded-circle" alt="">
+                            <div class="media-body ml-3"> <a href="javascript:void(0)" data-abc="true">@item.WrittenBy.UserName</a>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        @item.Body
+                    </div>
+                    <div class="card-footer d-flex flex-wrap justify-content-between align-items-center px-0 pt-0 pb-3">
+                        <div class="px-4 pt-3">
+                            <a href="javascript:void(0)" class="text-muted d-inline-flex align-items-center align-middle" data-abc="true">
+                                <image class="align-middle oi oi-thumb-up"></image>
+                            </a>
+                            <span class="text-muted d-inline-flex align-items-center align-middle ml-4">
+                                <span class="align-middle oi">@item.Votes.Count</span>
+                            </span>
+                        </div>
+                        <div class="px-4 pt-3">
+                            <AuthorizeView Policy="SubForumAdmin">
+                                <Authorized>
+                                    <button type="button" class="btn btn-warning" @onclick="@(() => ShowEditComment(item))">
+                                        Edit
+                                    </button>
+                                    <button type="button" class="btn btn-danger" @onclick="@(() => removeComment(item))">
+                                        DELETE
+                                    </button>
+                                </Authorized>
+                                <NotAuthorized>
+                                </NotAuthorized>
+                            </AuthorizeView>
+                            <AuthorizeView>
+                                <Authorized>
+                                    @if (item.WrittenBy.Id.Equals(_user.Id))
+                                    {
+                                        <button type="button" class="btn btn-warning" @onclick="@(() => ShowEditComment(item))">
+                                            Edit
+                                        </button>
+                                        <button type="button" class="btn btn-danger" @onclick="@(() => removeComment(item))">
+                                            DELETE
+                                        </button>
+                                    }
+                                </Authorized>
+                                <NotAuthorized>
+                                </NotAuthorized>
+                            </AuthorizeView>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<!--Modal-->
+@if (showModal)
+{
+    <Modal>
+        <main class="login-form">
+                    <div class="container-fluid">
+                        <div class="row justify-content-center">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-header">EDIT POST</div>
+                                    <div class="card-body">
+                                        <div class="form-group row">
+                                                <label for="email_address" class="col-md-4 col-form-label text-md-right">Title</label>
+                                                <div class="col-md-6">
+                                                    <input type="text" id="title" @bind="editedTitle" class="form-control" name="title" required autofocus>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="password" class="col-md-4 col-form-label text-md-right">Description</label>
+                                                <div class="col-md-6">
+                                                    <textarea id="editor" rows="5" class="form-control" @bind="editBody"></textarea>
+                                                </div>
+                                            </div>
+        
+                                            <div class="col-md-6 offset-md-4">
+                                                <button class="btn btn-primary" @onclick="AcceptEdit">
+                                                    Accept
+                                                </button>
+                                                <button class="btn btn-warning" @onclick="@(() => showModal = false)">Cancel</button>
+                                            </div>
+                                            <div class="col-md-6 offset-md-4">
+        
+                                                @if (!string.IsNullOrEmpty(errorLabel))
+                                                {
+                                                    <span class="help-block" style="color: red">@errorLabel</span>
+                                                }
+                                            </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+    </Modal>
+}
+@if (showModalComment)
+{
+    <Modal>
+        <main class="login-form">
+                    <div class="container-fluid">
+                        <div class="row justify-content-center">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-header">EDIT Comment</div>
+                                    <div class="card-body">
+                                        
+                                            <div class="form-group row">
+                                                <label for="password" class="col-md-4 col-form-label text-md-right">Comment</label>
+                                                <div class="col-md-6">
+                                                    <textarea id="editor" rows="5" class="form-control" @bind="editComment"></textarea>
+                                                </div>
+                                            </div>
+        
+                                            <div class="col-md-6 offset-md-4">
+                                                <button class="btn btn-primary" @onclick="AcceptEditComment">
+                                                    Accept
+                                                </button>
+                                                <button class="btn btn-warning" @onclick="@(() => showModalComment = false)">Cancel</button>
+                                            </div>
+                                            <div class="col-md-6 offset-md-4">
+        
+                                                @if (!string.IsNullOrEmpty(errorLabel))
+                                                {
+                                                    <span class="help-block" style="color: red">@errorLabel</span>
+                                                }
+                                            </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+    </Modal>
+}
+<AuthorizeView>
+    <Authorized>
+        <main class="login-form">
+                            <div class="container-fluid">
+                                <div class="row justify-content-center">
+                                    <div class="col-md-12">
+                                        <div class="card">
+                                            <div class="card-header">Add Comment</div>
+                                            <div class="card-body">
+                                                
+                                                    <div class="form-group row">
+                                                        <label for="password" class="col-md-4 col-form-label text-md-right">Comment</label>
+                                                        <div class="col-md-6">
+                                                            <textarea id="editor" rows="5" class="form-control" @bind="editComment"></textarea>
+                                                        </div>
+                                                    </div>
+                
+                                                    <div class="col-md-6 offset-md-4">
+                                                        <button class="btn btn-primary" @onclick="AcceptPostComment">
+                                                            Accept
+                                                        </button>
+                                                    </div>
+                                                    <div class="col-md-6 offset-md-4">
+                
+                                                        @if (!string.IsNullOrEmpty(errorLabel))
+                                                        {
+                                                            <span class="help-block" style="color: red">@errorLabel</span>
+                                                        }
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </main>
+    </Authorized>
+    <NotAuthorized>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    //show modal
+    private bool showModal;
+    private bool showModalComment;
+    private string? editId;
+    private string? editCommentId;
+    private string? editComment = String.Empty;
+    private string editedTitle = String.Empty;
+    private string editBody = String.Empty;
+
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthState { get; set; } = null!;
+    //param ID
+    [Parameter]
+    public string IdForum { get; set; }
+    [Parameter]
+    public string IdPost { get; set; }
+    
+    //error labe;
+    private string errorLabel=String.Empty;
+    
+    //post and subforum collection
+    private User? _user;
+    private SubForum? subForum;
+    private Post? _post;
+    private ICollection<Comment>? _comments;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            subForum = await _subForumService.GetSubForumByID(IdForum);
+            _post = subForum.Posts.First(t=>t.Id.Equals(IdPost));
+            _comments = _post.Comments;
+        }
+        catch (Exception e)
+        {
+            errorLabel = $"Error: {e.Message}";
+        }
+        try
+        {
+            AuthenticationState authState = await AuthState;
+            ClaimsPrincipal user = authState.User;
+            if (user.Identity.IsAuthenticated)
+            {
+    //get user clas base on the user identity
+                _user = await _userService.GetUser(user.Identity.Name);
+            }
+        }
+        catch (Exception e)
+        {
+        }
+    }
+    
+    
+    private async Task removeComment(Comment comment)
+    {
+        subForum.Posts.First(t=>t.Id.Equals(_post.Id)).Comments.Remove(comment);
+        await _subForumService.UpdateSubForum(subForum);
+    }
+    
+    private async Task removePost(Post post)
+    {
+        subForum.Posts.Remove(post);
+        await _subForumService.UpdateSubForum(subForum);
+        Navigation.NavigateTo("/subforum/"+subForum.Id,true);
+    }
+    
+    //add comment
+    
+    private async Task AcceptPostComment()
+    {
+        try
+        {
+            Comment localComment = new Comment();
+            localComment.Body = editComment;
+            localComment.WrittenBy = _user;
+            subForum.Posts.First(t=>t.Id.Equals(IdPost)).Comments.Add(localComment);
+            await _subForumService.UpdateSubForum(subForum);
+            showModalComment = false;
+        }
+        catch (Exception e)
+        {
+            errorLabel = e.Message + " " + e.StackTrace;
+        }
+    }
+    
+    //MODAL editor
+    
+    private void ShowEdit(Post post)
+    {
+        editId = post.Id;
+        editedTitle = post.Header;
+        editBody = post.Body;
+        showModal = true;
+    }
+    
+    private void ShowEditComment(Comment comment)
+    {
+        editCommentId = comment.Id;
+        editComment = comment.Body;
+        showModalComment = true;
+    }
+    
+    private async Task AcceptEdit()
+    {
+        try
+        {
+            Post localPost = subForum.Posts.First((t => t.Id.Equals(editId)));
+            localPost.Header = editedTitle;
+            localPost.Body = editBody;
+            await _subForumService.UpdateSubForum(subForum);
+            showModal = false;
+        }
+        catch (Exception e)
+        {
+            errorLabel = e.Message + " " + e.StackTrace;
+        }
+    }
+
+    private async Task AcceptEditComment()
+    {
+        try
+        {
+            Comment localComment = subForum.Posts.First((t => t.Id.Equals(IdPost))).Comments.First(t=>t.Id.Equals(editCommentId));
+            localComment.Body = editComment;
+            await _subForumService.UpdateSubForum(subForum);
+            showModal = false;
+        }
+        catch (Exception e)
+        {
+            errorLabel = e.Message + " " + e.StackTrace;
+        }
+    }
+}

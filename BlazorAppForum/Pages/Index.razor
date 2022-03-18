@@ -7,30 +7,38 @@
 @inject IUserService _userService;
 
 
-        Welcome to best forum.com @_user.UserName
-        User details:
-        @_user.Id
-        @_user.UserName
-        @_user.City
-        @_user.Password
-        @_user.Role
-        @_user.BirthDate
-
-
-
-
+<AuthorizeView>
+    <Authorized>
+        <div class="container">
+                    <div class="card">
+                        <div class="info"> <span>@_user.UserName</span> <button @onclick="saveUserProfile">Save</button> </div>
+                        <div class="forms">
+                            <div class="inputs"> <span>City</span> <input type="text" @bind="@_user.City"> </div>
+                            <div class="inputs"> <span>Password</span> <input type="password" @bind="@_user.Password"> </div>
+                            <div class="inputs"> <span>Role</span> <input type="text" @bind="@_user.Role"> </div>
+                            <div class="inputs"> <span>BirthDate</span> <input type="date" @bind="@_user.BirthDate"> </div>
+                            <div class="inputs"> <span>ID</span> @_user.Id </div>
+                        </div>
+                        @if (!string.IsNullOrEmpty(errorLabel))
+                        {
+                            <span class="help-block" style="color: red">@errorLabel</span>
+                        }
+                        </div>
+                </div>
+    </Authorized>
+    <NotAuthorized>
+    </NotAuthorized>
+</AuthorizeView>
 
 
 @code {
-    //TODO add on index forum view list of posts and click on them to see details etc 
     
-
     [CascadingParameter]
     public Task<AuthenticationState> AuthState { get; set; } = null!;
 
     private User? _user;
     //User object
-    private string? roleTest;
+    private string errorLabel = String.Empty;
     
     protected override async Task OnInitializedAsync()
     {
@@ -44,4 +52,17 @@
         }
     }
 
+    private async Task saveUserProfile()
+    {
+        try
+        {
+            await _userService.UpdateUser(_user);
+        }
+        catch (Exception e)
+        {
+            errorLabel = $"Error: {e.Message}";
+        }
+        
+    }
+    
 }

@@ -25,7 +25,6 @@ public class FileDataDAO : ISubForumService, IUserService
 
     public async Task<SubForum> AddSubForum(SubForum subforum)
     {
-        subforum.Id = RandomIDGenerator.Generate(20);
         _fileContext.Forum.SubForums.Add(subforum);
         _fileContext.SaveChanges();
         return subforum;
@@ -41,6 +40,7 @@ public class FileDataDAO : ISubForumService, IUserService
     public async Task UpdateSubForum(SubForum subforum)
     {
         SubForum toUpdate = _fileContext.Forum.SubForums.First(t => t.Id.Equals(subforum.Id));
+        toUpdate.Posts = subforum.Posts;
         toUpdate.Description = subforum.Description;
         toUpdate.Title = subforum.Title;
         toUpdate.OwnedBy = subforum.OwnedBy;
@@ -70,7 +70,7 @@ public class FileDataDAO : ISubForumService, IUserService
         }
         else
         {
-            user.Id = RandomIDGenerator.Generate(20);
+            
             _fileContext.Forum.Users.Add(user);
             _fileContext.SaveChanges();
             return user;

@@ -37,25 +37,25 @@ public class FileContext
         {
             new User
             {
-                Id = RandomIDGenerator.Generate(20),UserName = "admin", Password = "adrian1234", City = "Horsens", BirthDate = new DateTime(1998,12,26),Role = "Admin"
+                UserName = "admin", Password = "adrian1234", City = "Horsens", BirthDate = new DateTime(1998,12,26),Role = "Admin"
             },
             new User{
-                Id = RandomIDGenerator.Generate(20), UserName = "user", Password = "adrian1234", City = "Horsens2", BirthDate = new DateTime(1998,12,26),Role = "User"
+                UserName = "user", Password = "adrian1234", City = "Horsens2", BirthDate = new DateTime(1998,12,26),Role = "User"
             },
             new User
             {
-                Id = RandomIDGenerator.Generate(20), UserName = "adminSUB", Password = "adrian1234", City = "Horsens", BirthDate = new DateTime(199,12,26),Role = "SubForumAdmin"
+                UserName = "adminSUB", Password = "adrian1234", City = "Horsens", BirthDate = new DateTime(199,12,26),Role = "SubForumAdmin"
             }
         };
             SubForum[] ts =
         {
             new SubForum
             {
-                Id = RandomIDGenerator.Generate(20), Description = "Testing something about subForum", Title = "Gaming", Posts = new List<Post>(), OwnedBy = new User()
+                Description = "Testing something about subForum", Title = "Gaming"
             },
             new SubForum()
             {
-                Id = RandomIDGenerator.Generate(20), Description = "Gaming dot this", Title = "Testing second", Posts = new List<Post>(), OwnedBy = new User()
+                Description = "Gaming dot this", Title = "Testing second"
             }
         };
 

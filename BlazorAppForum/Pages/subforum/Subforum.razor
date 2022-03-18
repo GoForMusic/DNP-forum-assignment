@@ -1,13 +1,44 @@
 ﻿@page "/subforum/{Id}"
 @using Domain.Models
 @using Domain.Contracts
+@using UIElements
+@using System.Security.Claims
 
 @inject ISubForumService _subForumService
 @inject NavigationManager Navigation
+@inject IUserService _userService
 
 @namespace subforum
 
-
+<div class="filterbar">
+    <div class="filterscontainer">
+        <div class="filter">
+            <div>
+                <label>Title:</label>
+            </div>
+            <div>
+                <input type="text" class="owneridfield" @oninput="args => UpdateOwnerFilter(args)"/>
+            </div>
+        </div>
+    </div>
+</div>
+<AuthorizeView>
+    <Authorized>
+        <div class="filterbar">
+            <div class="filterscontainer">
+                <div class="filter">
+                    <button type="button" class="btn btn-primary" @onclick="@(() => Navigation.NavigateTo("/subforum/" + subForum.Id + "/AddPost"))">
+                        Add Post
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+    </Authorized>
+    <NotAuthorized>
+        
+    </NotAuthorized>
+</AuthorizeView>
 
 @if (_postsCollection  == null)
 {
@@ -30,13 +61,13 @@ else
                                 <div class="text-muted small">@item.date_posted</div>
                             </div>
                             <div class="text-muted small ml-3">
-                                <div>@item.Header</div>
+                                <div></div>
                                 
                             </div>
                         </div>
                     </div>
                     <div class="card-body">
-                        @item.Body
+                        @item.Header
                     </div>
                     <div class="card-footer d-flex flex-wrap justify-content-between align-items-center px-0 pt-0 pb-3">
                         <div class="px-4 pt-3">
@@ -50,10 +81,10 @@ else
                         <div class="px-4 pt-3">
                             <AuthorizeView Policy="SubForumAdmin">
                                 <Authorized>
-                                    <button type="button" class="btn btn-warning" @onclick="@(() => Navigation.NavigateTo("/subforum/" + subForum.Id + "/post/" + item.Id))">
+                                    <button type="button" class="btn btn-warning" @onclick="@(() => ShowEdit(item))">
                                         Edit
                                     </button>
-                                    <button type="button" class="btn btn-danger" @onclick="@(() => Navigation.NavigateTo("/subforum/" + subForum.Id + "/post/" + item.Id))">
+                                    <button type="button" class="btn btn-danger" @onclick="@(() => removePost(item))">
                                         DELETE
                                     </button>
                                 </Authorized>
@@ -61,7 +92,7 @@ else
                                 </NotAuthorized>
                             </AuthorizeView>
                             <button type="button" class="btn btn-primary" @onclick="@(() => Navigation.NavigateTo("/subforum/" + subForum.Id + "/post/" + item.Id))">
-                                Reply
+                                Show More
                             </button>
                         </div>
                     </div>
@@ -73,19 +104,102 @@ else
 }
 
 
+
+
+@if (showModal)
+{
+    <Modal>
+        <main class="login-form">
+                    <div class="container-fluid">
+                        <div class="row justify-content-center">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-header">EDIT POST</div>
+                                    <div class="card-body">
+                                        <div class="form-group row">
+                                                <label for="email_address" class="col-md-4 col-form-label text-md-right">Title</label>
+                                                <div class="col-md-6">
+                                                    <input type="text" id="title" @bind="editedTitle" class="form-control" name="title" required autofocus>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="password" class="col-md-4 col-form-label text-md-right">Description</label>
+                                                <div class="col-md-6">
+                                                    <textarea id="editor" rows="5" class="form-control" @bind="editBody"></textarea>
+                                                </div>
+                                            </div>
+        
+                                            <div class="col-md-6 offset-md-4">
+                                                <button class="btn btn-primary" @onclick="AcceptEdit">
+                                                    Accept
+                                                </button>
+                                                <button class="btn btn-warning" @onclick="@(() => showModal = false)">Cancel</button>
+                                            </div>
+                                            <div class="col-md-6 offset-md-4">
+        
+                                                @if (!string.IsNullOrEmpty(errorLabel))
+                                                {
+                                                    <span class="help-block" style="color: red">@errorLabel</span>
+                                                }
+                                            </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+    </Modal>
+}
+
+
 @code {
+    
+    
+    //show modal
+    private bool showModal;
+    private string? editId;
+    private string editedTitle = String.Empty;
+    private string editBody = String.Empty;
+    private Post postToEdit = new();
+
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthState { get; set; } = null!;
+    //param ID
     [Parameter]
     public string Id { get; set; }
     
+    //error labe;
     private string errorLabel=String.Empty;
+    
+    //post and subforum collection
     private ICollection<Post>? _postsCollection;
-
-    SubForum? subForum;
+    private SubForum? subForum;
+    private User? _user;
     
     protected override async Task OnInitializedAsync()
     {
-        Domain.Models.SubForum subForum = await _subForumService.GetSubForumByID(Id);
-        _postsCollection = subForum.Posts;
+        try
+        {
+            subForum = await _subForumService.GetSubForumByID(Id);
+            _postsCollection = subForum.Posts;
+        }
+        catch (Exception e)
+        {
+            errorLabel = $"Error: {e.Message}";
+        }
+        try
+        {
+            AuthenticationState authState = await AuthState;
+            ClaimsPrincipal user = authState.User;
+            if (user.Identity.IsAuthenticated)
+            {
+    //get user clas base on the user identity
+                _user = await _userService.GetUser(user.Identity.Name);
+            }
+        }
+        catch (Exception e)
+        {
+        }
     }
 
     private string adminBanner(Post item)
@@ -93,5 +207,51 @@ else
         if (item.WrittenBy.Role.Equals("Admin")) return "admin";
         else return "normal";
     }
+
+    private async Task removePost(Post post)
+    {
+        subForum.Posts.Remove(post);
+        await _subForumService.UpdateSubForum(subForum);
+    }
     
+    //MODAL editor
+    
+    private void ShowEdit(Post post)
+    {
+        postToEdit = post;
+        editId = post.Id;
+        editedTitle = post.Header;
+        editBody = post.Body;
+        showModal = true;
+    }
+    
+    private async Task AcceptEdit()
+    {
+        try
+        {
+            Post localPost = _postsCollection.First((t => t.Id.Equals(editId)));
+            localPost.Header = editedTitle;
+            localPost.Body = editBody;
+            await _subForumService.UpdateSubForum(subForum);
+            showModal = false;
+        }
+        catch (Exception e)
+        {
+            errorLabel = e.Message;
+        }
+    }
+    
+    
+    private async Task UpdateOwnerFilter(ChangeEventArgs args)
+    {
+        string value = (string)args.Value;
+        if (string.IsNullOrEmpty(value))
+        {
+
+            
+        }
+        {
+            _postsCollection = subForum.Posts;
+        }
+    }
 }

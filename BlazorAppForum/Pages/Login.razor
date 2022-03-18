@@ -20,9 +20,7 @@
                         <div class="card">
                             <div class="card-header">Login</div>
                             <div class="card-body">
-                                <form>
-                                    
-                                    <div class="form-group row">
+                                <div class="form-group row">
                                         <label for="email_address" class="col-md-4 col-form-label text-md-right">Username</label>
                                         <div class="col-md-6">
                                             <input type="text" id="email_address" @bind="userName" class="form-control" name="email-address" required autofocus>
@@ -61,7 +59,6 @@
                                             <span class="help-block" style="color: red">@errorLabel</span>
                                         }
                                     </div>
-                                </form>
                             </div>
                         </div>
                     </div>
@@ -94,7 +91,8 @@
             else
             {
                 await authService.LoginAsync(userName, password);
-                navMgr.NavigateTo("/");
+                navMgr.NavigateTo("");
+                errorLabel = "Saved!";
             }
         }
         catch (Exception e)
