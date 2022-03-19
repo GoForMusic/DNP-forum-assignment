@@ -1,4 +1,4 @@
-﻿@page "/subforum/{Id}/AddPost"
+﻿@page "/AddSubForum"
 @using Domain.Models
 @using Domain.Contracts
 @using System.Security.Claims
@@ -7,30 +7,30 @@
 @inject IUserService _userService
 @inject NavigationManager Navigation
 
-@attribute [Authorize]
+@attribute [Authorize(Policy = "SubForumAdmin")]
 
 <main class="login-form">
             <div class="container-fluid">
                 <div class="row justify-content-center">
                     <div class="col-md-8">
                         <div class="card">
-                            <div class="card-header">AddPost</div>
+                            <div class="card-header">Add SubForum</div>
                             <div class="card-body">
                                 <div class="form-group row">
                                         <label for="email_address" class="col-md-4 col-form-label text-md-right">Title</label>
                                         <div class="col-md-6">
-                                            <input type="text" id="title" @bind="_post.Header" class="form-control" name="title" required autofocus>
+                                            <input type="text" id="title" @bind="subForum.Title" class="form-control" name="title" required autofocus>
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <label for="password" class="col-md-4 col-form-label text-md-right">Description</label>
                                         <div class="col-md-6">
-                                            <textarea id="editor" rows="5" class="form-control" @bind="_post.Body"></textarea>
+                                            <textarea id="editor" rows="5" class="form-control" @bind="subForum.Description"></textarea>
                                         </div>
                                     </div>
 
                                     <div class="col-md-6 offset-md-4">
-                                        <button class="btn btn-primary" @onclick="CreatePostAsync">
+                                        <button class="btn btn-primary" @onclick="CreateSubForumAsync">
                                             Create
                                         </button>
                                     </div>
@@ -50,28 +50,18 @@
 
 
 @code {
-
-    private string? titlePost;
-    private string? contectPost;
-    
     [CascadingParameter]
     public Task<AuthenticationState> AuthState { get; set; } = null!;
-    
-    [Parameter]
-    public string Id { get; set; }
-    
-    private string errorLabel=String.Empty;
 
-    private Post? _post=new Post();
-    private SubForum? subForum;
+    private string errorLabel=String.Empty;
+    
+    private SubForum? subForum = new SubForum();
     private User? _user;
     
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            subForum = await _subForumService.GetSubForumByID(Id);
-
             AuthenticationState authState = await AuthState;
             ClaimsPrincipal user = authState.User;
 
@@ -88,23 +78,19 @@
 
     }
 
-    private async Task CreatePostAsync()
+    private async Task CreateSubForumAsync()
     {
         try
         {
-            if (string.IsNullOrEmpty(_post.Header) || string.IsNullOrEmpty(_post.Body))
+            if (string.IsNullOrEmpty(subForum.Title) || string.IsNullOrEmpty(subForum.Description))
             {
                 throw new Exception("All the fields are mandatory");
             }
             else
             {
-                _post.WrittenBy = _user;
-                _post.date_posted = DateTime.Today;
-                subForum = await _subForumService.GetSubForumByID(Id);
-                subForum.Posts.Add(_post);
-            
-                await _subForumService.UpdateSubForum(subForum);
-                Navigation.NavigateTo("/subforum/"+Id,true);
+                subForum.OwnedBy = _user;
+                await _subForumService.AddSubForum(subForum);
+                Navigation.NavigateTo("/subforum/"+subForum.Id,true);
             }
         }
         catch (Exception e)

@@ -12,25 +12,4 @@ public class Vote
         Value = 0;
         Voter = new User();
     }
-    
-    
-    public bool Valid()
-    {
-        if (Value == 1) return true;
-        else
-        {
-            return false;
-        }
-    }
-    
-    public bool canVote(User user)
-    {
-        if (Voter.Equals(user)) return false;
-        else
-        {
-            Value = 1;
-            return true;
-        }
-    }
-    
 }
