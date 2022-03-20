@@ -15,4 +15,16 @@
       <Folder Include="wwwroot\img" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="wwwroot\js\bootstrap.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\js\highlight.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\js\highlight.min.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\js\jquery.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\js\popper.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\js\wysiwyg.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\js\wysiwyg.min.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\css\bootstrap\bootstrap.min.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\css\bootstrap\bootstrap.min.css.map" />
+    </ItemGroup>
+
 </Project>
