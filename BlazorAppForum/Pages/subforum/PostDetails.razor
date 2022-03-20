@@ -382,7 +382,7 @@
             Comment localComment = subForum.Posts.First((t => t.Id.Equals(IdPost))).Comments.First(t=>t.Id.Equals(editCommentId));
             localComment.Body = editComment;
             await _subForumService.UpdateSubForum(subForum);
-            showModal = false;
+            showModalComment = false;
         }
         catch (Exception e)
         {
