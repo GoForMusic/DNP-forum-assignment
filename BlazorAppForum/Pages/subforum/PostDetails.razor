@@ -30,7 +30,7 @@
                     <div class="card-footer d-flex flex-wrap justify-content-between align-items-center px-0 pt-0 pb-3">
                         <div class="px-4 pt-3">
                             <a href="javascript:void(0)" class="text-muted d-inline-flex align-items-center align-middle" data-abc="true">
-                                 <image class="align-middle oi oi-thumb-up"></image>
+                                 <image class="align-middle oi oi-thumb-up" @onclick="@(() => vote(_post))"></image>
                             </a> 
                             <span class="text-muted d-inline-flex align-items-center align-middle ml-4">
                                  <span class="align-middle oi">@_post.Votes.Count</span>
@@ -90,7 +90,7 @@
                     <div class="card-footer d-flex flex-wrap justify-content-between align-items-center px-0 pt-0 pb-3">
                         <div class="px-4 pt-3">
                             <a href="javascript:void(0)" class="text-muted d-inline-flex align-items-center align-middle" data-abc="true">
-                                <image class="align-middle oi oi-thumb-up"></image>
+                                <image class="align-middle oi oi-thumb-up" @onclick="@(() => voteComment(item))"></image>
                             </a>
                             <span class="text-muted d-inline-flex align-items-center align-middle ml-4">
                                 <span class="align-middle oi">@item.Votes.Count</span>
@@ -388,5 +388,35 @@
         {
             errorLabel = e.Message + " " + e.StackTrace;
         }
+    }
+    
+    //vote system
+    private async Task vote(Post item)
+    {
+        if (_user != null)
+        {
+            if (!item.Votes.Contains(item.Votes.FirstOrDefault(t => t.Voter.Id.Equals(_user.Id))))
+            {
+                Vote local = new Vote();
+                local.Voter = _user;
+                item.Votes.Add(local);
+                await _subForumService.UpdateSubForum(subForum);
+            }
+        }
+
+    }
+    private async Task voteComment(Comment item)
+    {
+        if (_user != null)
+        {
+            if (!item.Votes.Contains(item.Votes.FirstOrDefault(t => t.Voter.Id.Equals(_user.Id))))
+            {
+                Vote local = new Vote();
+                local.Voter = _user;
+                item.Votes.Add(local);
+                await _subForumService.UpdateSubForum(subForum);
+            }
+        }
+
     }
 }

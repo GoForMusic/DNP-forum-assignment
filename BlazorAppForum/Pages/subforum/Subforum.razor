@@ -72,7 +72,7 @@ else
                     <div class="card-footer d-flex flex-wrap justify-content-between align-items-center px-0 pt-0 pb-3">
                         <div class="px-4 pt-3">
                             <a href="javascript:void(0)" class="text-muted d-inline-flex align-items-center align-middle" data-abc="true">
-                                 <image class="align-middle oi oi-thumb-up"></image>
+                                 <image class="align-middle oi oi-thumb-up" @onclick="@(() => vote(item))"></image>
                             </a> 
                             <span class="text-muted d-inline-flex align-items-center align-middle ml-4">
                                  <span class="align-middle oi">@item.Votes.Count</span>
@@ -240,7 +240,23 @@ else
             errorLabel = e.Message;
         }
     }
-    
+
+    //vote system
+    private async Task vote(Post item)
+    {
+        if (_user != null)
+        {
+            if (!item.Votes.Contains(item.Votes.FirstOrDefault(t => t.Voter.Id.Equals(_user.Id))))
+            {
+                Vote local = new Vote();
+                local.Voter = _user;
+                item.Votes.Add(local);
+                Console.WriteLine(item.Votes.Count);
+                await _subForumService.UpdateSubForum(subForum);
+            }
+        }
+
+    }
     
     private async Task UpdateOwnerFilter(ChangeEventArgs args)
     {
