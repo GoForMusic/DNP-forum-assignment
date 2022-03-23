@@ -42,4 +42,5 @@ A class diagram, in .svg file format
 <p>&nbsp;<img align="center" src="https://github-readme-stats.vercel.app/api?username=goformusic&show_icons=true&locale=en&theme=radical" alt="goformusic" /></p>
 #
 
+![Alt text](https://raw.githubusercontent.com/GoForMusic/DNP-forum-assignment/master/276173588_1013544566036941_7580151942647930064_n.png)
 
