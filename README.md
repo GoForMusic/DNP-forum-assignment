@@ -37,3 +37,9 @@ A link to github where you have your code.
 A link to a ~3 minute video, where you show off your application. Keep it simple, you don’t need to cover 
 everything.
 A class diagram, in .svg file format
+
+#
+<p>&nbsp;<img align="center" src="https://github-readme-stats.vercel.app/api?username=goformusic&show_icons=true&locale=en&theme=radical" alt="goformusic" /></p>
+#
+
+
