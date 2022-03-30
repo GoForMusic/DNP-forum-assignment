@@ -1,9 +1,11 @@
+using Applicaiton.DAOInterfaces;
+using Applicaiton.ServiceImpl;
 using BlazorAppForum.Authentication;
-using FileData.DataAccess;
-using Domain.Contracts;
-using Microsoft.AspNetCore.Components;
+using Contracts;
+using JsonDataAccess.DAOImpl;
+using JsonDataAccess.JsonContext;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.Web;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,12 +14,14 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
 //add scopes
-builder.Services.AddScoped<FileContext>();
 builder.Services.AddScoped<AuthenticationStateProvider, SimpleAuthenticationStateProvider>();
 builder.Services.AddScoped<IAuthService, AuthServiceImpl>();
-builder.Services.AddScoped<IUserService, FileDataDAO>();
-builder.Services.AddScoped<ISubForumService, FileDataDAO>();
-
+//services login
+builder.Services.AddScoped<IUserService, UserServiceImpl>();
+builder.Services.AddScoped<ISubForumService, SubForumServiceImpl>();
+//file 
+builder.Services.AddScoped<FileContext>();
+builder.Services.AddScoped<IForumDAO, ForumDAOImpl>();
 
 
 builder.Services.AddAuthorization(options =>

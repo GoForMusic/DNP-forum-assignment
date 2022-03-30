@@ -1,7 +1,8 @@
 ﻿@page "/subforum/{Id}/AddPost"
-@using Domain.Models
-@using Domain.Contracts
 @using System.Security.Claims
+@using Contracts
+@using Entities.Models
+@using Microsoft.AspNetCore.Components
 
 @inject ISubForumService _subForumService;
 @inject IUserService _userService

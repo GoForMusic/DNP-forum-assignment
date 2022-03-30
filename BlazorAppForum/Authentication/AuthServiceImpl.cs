@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
 using System.Text.Json;
-using Domain.Models;
-using Domain.Contracts;
+using Contracts;
+using Entities.Models;
 using Microsoft.JSInterop;
 
 namespace BlazorAppForum.Authentication;

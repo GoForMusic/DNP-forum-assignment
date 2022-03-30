@@ -1,6 +1,8 @@
-﻿using Domain.Models;
+﻿
 
-namespace Domain.Contracts;
+using Entities.Models;
+
+namespace Contracts;
 
 public interface IUserService
 {

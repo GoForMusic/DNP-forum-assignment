@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
-using Domain.Models;
+using Entities.Models;
 
-namespace FileData.DataAccess;
+namespace JsonDataAccess.JsonContext;
 
 public class FileContext
 {

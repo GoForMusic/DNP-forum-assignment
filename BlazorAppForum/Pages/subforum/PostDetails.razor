@@ -1,9 +1,8 @@
 ﻿@page "/subforum/{IdForum}/post/{IdPost}"
-
-@using Domain.Models
-@using Domain.Contracts
 @using UIElements
 @using System.Security.Claims
+@using Contracts
+@using Entities.Models
 
 @inject ISubForumService _subForumService
 @inject NavigationManager Navigation

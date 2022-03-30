@@ -1,7 +1,9 @@
 @page "/"
 @using System.Security.Claims
-@using Domain.Contracts
-@using Domain.Models
+@using Contracts
+@using Entities.Models
+@using Microsoft.AspNetCore.Components
+
 
 @attribute [Authorize]
 @inject IUserService _userService;

@@ -1,13 +1,14 @@
-﻿using Domain.Contracts;
-using Domain.Models;
+﻿using Applicaiton.DAOInterfaces;
+using Entities.Models;
+using JsonDataAccess.JsonContext;
 
-namespace FileData.DataAccess;
+namespace JsonDataAccess.DAOImpl;
 
-public class FileDataDAO : ISubForumService, IUserService
+public class ForumDAOImpl : IForumDAO
 {
     private FileContext _fileContext;
 
-    public FileDataDAO(FileContext fileContext)
+    public ForumDAOImpl(FileContext fileContext)
     {
         _fileContext = fileContext;
     }

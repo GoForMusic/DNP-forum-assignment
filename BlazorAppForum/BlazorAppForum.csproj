@@ -7,8 +7,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Domain\Domain.csproj" />
-      <ProjectReference Include="..\FileData\FileData.csproj" />
+      <ProjectReference Include="..\Application\Application.csproj" />
+      <ProjectReference Include="..\JsonDataAccess\JsonDataAccess.csproj" />
+      <ProjectReference Include="..\Logic\Logic.csproj" />
+      <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
     </ItemGroup>
 
     <ItemGroup>
