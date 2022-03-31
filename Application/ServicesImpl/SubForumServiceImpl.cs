@@ -25,6 +25,11 @@ public class SubForumServiceImpl : ISubForumService
         return await _forumDao.GetSubForumByID(id);
     }
 
+    public async Task<SubForum> GetSubForumByFilter(string id, string title)
+    {
+        return await _forumDao.GetSubForumByID(id);
+    }
+
     public async Task<SubForum> AddSubForum(SubForum subforum)
     {
         return await _forumDao.AddSubForum(subforum);

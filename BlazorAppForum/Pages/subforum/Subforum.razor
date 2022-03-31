@@ -17,7 +17,7 @@
                 <label>Title:</label>
             </div>
             <div>
-                <input type="text" class="owneridfield" @oninput="args => UpdateOwnerFilter(args)"/>
+                <input type="text" class="owneridfield" @oninput="@(args => UpdateOwnerFilter(args))"/>
             </div>
         </div>
     </div>
@@ -180,8 +180,7 @@ else
     {
         try
         {
-            subForum = await _subForumService.GetSubForumByID(Id);
-            _postsCollection = subForum.Posts;
+            await GetNormal();
         }
         catch (Exception e)
         {
@@ -263,11 +262,19 @@ else
         string value = (string)args.Value;
         if (string.IsNullOrEmpty(value))
         {
+            await GetNormal();
+            return;
+        }
+        
+        subForum = await _subForumService.GetSubForumByFilter(Id,value);
+        _postsCollection.Clear();
+        _postsCollection = subForum.Posts;
 
-            
-        }
-        {
-            _postsCollection = subForum.Posts;
-        }
+    }
+
+    private async Task GetNormal()
+    {
+        subForum = await _subForumService.GetSubForumByID(Id);
+        _postsCollection = subForum.Posts;
     }
 }

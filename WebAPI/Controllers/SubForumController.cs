@@ -42,12 +42,20 @@ public class SubForumController : ControllerBase
     //get subforum by ID
     [HttpGet]
     [Route("{id}")]
-    public async Task<ActionResult<ICollection<SubForum>>> GetByID([FromRoute] string id)
+    public async Task<ActionResult<ICollection<SubForum>>> GetByID([FromRoute] string id,[FromQuery] string? title)
     {
         try
         {
             SubForum subForum = await _subForumServiceImpl.GetSubForumByID(id);
-            return Ok(subForum);
+            if (title != null)
+            {
+                //return a new list of elements base on the query
+                SubForum localForum = subForum;
+                localForum.Posts = subForum.Posts.FindAll(t=>t.Header.Contains(title));
+                
+                return Ok(localForum);
+            }
+            else return Ok(subForum);
         }
         catch (Exception e)
         {

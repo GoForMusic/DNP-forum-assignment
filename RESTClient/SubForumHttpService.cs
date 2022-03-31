@@ -41,6 +41,24 @@ public class SubForumHttpService : ISubForumService
             throw new Exception(e.Message);
         }
     }
+    
+    public async Task<SubForum> GetSubForumByFilter(string id, string title)
+    {
+        try
+        {
+            string content = await ServerAPI.getContent(Methods.Get,$"/subforum/{id}?title={title}");
+        
+            SubForum subForum = JsonSerializer.Deserialize<SubForum>(content, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            })!;
+            return subForum;
+        }
+        catch (Exception e)
+        {
+            throw new Exception(e.Message);
+        }
+    }
 
     public async Task<SubForum> AddSubForum(SubForum subforum)
     {
