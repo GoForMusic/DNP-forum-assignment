@@ -59,11 +59,19 @@
     private User? _user;
     //User object
     private string? roleTest;
-    private ICollection<SubForum>? _subForums;
+    private ICollection<SubForum>? _subForums = new List<SubForum>();
 
     protected override async Task OnInitializedAsync()
     {
-        _subForums = await _forumService.GetSubForumAsync();
+        try
+        {
+            _subForums = await _forumService.GetSubForumAsync();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+       
     }
 
 }

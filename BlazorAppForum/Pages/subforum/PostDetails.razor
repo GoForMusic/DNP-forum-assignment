@@ -276,10 +276,10 @@
     private string errorLabel=String.Empty;
     
     //post and subforum collection
-    private User? _user;
+    private User? _user = new();
     private SubForum? subForum;
-    private Post? _post;
-    private ICollection<Comment>? _comments;
+    private Post? _post = new();
+    private ICollection<Comment>? _comments = new List<Comment>();
 
     protected override async Task OnInitializedAsync()
     {

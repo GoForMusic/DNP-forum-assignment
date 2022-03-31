@@ -38,7 +38,7 @@
     [CascadingParameter]
     public Task<AuthenticationState> AuthState { get; set; } = null!;
 
-    private User? _user;
+    private User? _user = new();
     //User object
     private string errorLabel = String.Empty;
     
