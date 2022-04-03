@@ -96,7 +96,7 @@ public class SubForumController : ControllerBase
     
     //create
     [HttpPost]
-    public async Task<ActionResult<SubForum>> AddTodo([FromBody] SubForum subForum)
+    public async Task<ActionResult<SubForum>> AddSubForum([FromBody] SubForum subForum)
     {
         try
         {
