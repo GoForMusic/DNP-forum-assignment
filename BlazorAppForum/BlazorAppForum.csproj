@@ -7,8 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Logic\Logic.csproj" />
-      <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
       <ProjectReference Include="..\RESTClient\RESTClient.csproj" />
     </ItemGroup>
 

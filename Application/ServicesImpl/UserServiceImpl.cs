@@ -32,6 +32,7 @@ public class UserServiceImpl : IUserService
 
     public async Task<User> AddUser(User user)
     {
+        user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
         return await _forumDao.AddUser(user);
     }
 

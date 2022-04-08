@@ -22,13 +22,18 @@ public class AuthServiceImpl : IAuthService
     {
         User? user = await userService.GetUser(username); // Get user from database
 
-        ValidateLoginCredentials(password, user); // Validate input data against data from database
-        // validation success
-        await CacheUserAsync(user!); // Cache the user object in the browser 
+        bool verified = BCrypt.Net.BCrypt.Verify(password, user.Password);
+            //ValidateLoginCredentials(BCrypt.Net.BCrypt.HashPassword(password), user); // Validate input data against data from database
 
-        ClaimsPrincipal principal = CreateClaimsPrincipal(user); // convert user object to ClaimsPrincipal
+            if (verified)
+            {
+                // validation success
+                await CacheUserAsync(user!); // Cache the user object in the browser 
 
-        OnAuthStateChanged?.Invoke(principal); // notify interested classes in the change of authentication state
+                ClaimsPrincipal principal = CreateClaimsPrincipal(user); // convert user object to ClaimsPrincipal
+
+                OnAuthStateChanged?.Invoke(principal); // notify interested classes in the change of authentication state   
+            }
     }
 
     public async Task LogoutAsync()

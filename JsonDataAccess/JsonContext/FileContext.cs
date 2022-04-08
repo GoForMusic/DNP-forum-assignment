@@ -37,14 +37,14 @@ public class FileContext
         {
             new User
             {
-                UserName = "admin", Password = "adrian1234", City = "Horsens", BirthDate = new DateTime(1998,12,26),Role = "Admin"
+                UserName = "admin", Password = BCrypt.Net.BCrypt.HashPassword("adrian1234"), City = "Horsens", BirthDate = new DateTime(1998,12,26),Role = "Admin"
             },
             new User{
-                UserName = "user", Password = "adrian1234", City = "Horsens2", BirthDate = new DateTime(1998,12,26),Role = "User"
+                UserName = "user", Password = BCrypt.Net.BCrypt.HashPassword("adrian1234"), City = "Horsens2", BirthDate = new DateTime(1998,12,26),Role = "User"
             },
             new User
             {
-                UserName = "adminSUB", Password = "adrian1234", City = "Horsens", BirthDate = new DateTime(199,12,26),Role = "SubForumAdmin"
+                UserName = "adminSUB", Password = BCrypt.Net.BCrypt.HashPassword("adrian1234"), City = "Horsens", BirthDate = new DateTime(199,12,26),Role = "SubForumAdmin"
             }
         };
             SubForum[] ts =

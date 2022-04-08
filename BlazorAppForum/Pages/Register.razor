@@ -24,9 +24,7 @@
                         <div class="card">
                             <div class="card-header">Register</div>
                             <div class="card-body">
-                                <form>
-                                    
-                                    <div class="form-group row">
+                                <div class="form-group row">
                                         <label for="email_address" class="col-md-4 col-form-label text-md-right">Username</label>
                                         <div class="col-md-6">
                                             <input type="text" id="email_address" @bind="newUserItem.UserName" class="form-control" name="username" required autofocus>
@@ -68,7 +66,6 @@
                                             <span class="help-block" style="color: red">@errorMessage</span>
                                         }
                                     </div>
-                                </form>
                             </div>
                         </div>
                     </div>
@@ -101,7 +98,7 @@
                 newUserItem.Role = "User";
                 newUserItem.BirthDate = today;
                 await _userService.AddUser(newUserItem);
-                NavigationManager.NavigateTo("/");
+                NavigationManager.NavigateTo("/",true);
             }
             
                 
