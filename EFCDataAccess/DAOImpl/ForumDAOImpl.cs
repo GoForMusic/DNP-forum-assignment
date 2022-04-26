@@ -2,13 +2,14 @@
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using SQLitePCL;
 
 namespace EFCDataAccess.DAOImpl;
 
 
 public class ForumDAOImpl : IForumDAO
 {
-    private DBContext _dbContext;
+    private readonly DBContext _dbContext;
 
     public ForumDAOImpl(DBContext _dbContext)
     {
@@ -33,7 +34,7 @@ public class ForumDAOImpl : IForumDAO
         }
         catch (Exception e)
         {
-            Console.WriteLine(e+" "+ e.StackTrace); // or log to file, etc.
+            Console.WriteLine(e.Message+" "+ e.StackTrace); // or log to file, etc.
             throw; // re-throw the exception if you want it to continue up the stack
         }
     }
@@ -47,15 +48,15 @@ public class ForumDAOImpl : IForumDAO
                 .ThenInclude(f => f.WrittenBy).Include(f => f.Posts)
                 .ThenInclude(f => f.Comments)
                 .ThenInclude(f => f.WrittenBy).Include(f => f.Posts)
-                .ThenInclude(f => f.Comments)
-                .ThenInclude(f => f.Votes)
-                .ThenInclude(f => f.Voter).Include(f => f.Posts)
-                .ThenInclude(f => f.Comments)
-                .ThenInclude(f => f.WrittenBy).FirstOrDefaultAsync(f=>f.Id==id);
+               .ThenInclude(f => f.Comments)
+               .ThenInclude(f => f.Votes)
+               .ThenInclude(f => f.Voter).Include(f => f.Posts)
+              .ThenInclude(f => f.Comments)
+              .ThenInclude(f => f.WrittenBy).FirstAsync(f=>f.Id==id);
         }
         catch (Exception e)
         {
-            Console.WriteLine(e+" "+ e.StackTrace); // or log to file, etc.
+            Console.WriteLine(e.Message+" "+ e.StackTrace); // or log to file, etc.
             throw; // re-throw the exception if you want it to continue up the stack
         }
     }
@@ -64,8 +65,12 @@ public class ForumDAOImpl : IForumDAO
     {
         try
         {
-            await _dbContext.SubForums.AddAsync(subforum);
+            User? user = await _dbContext.Users.FirstAsync(t=>t.Id.Equals(subforum.OwnedBy.Id));
+            SubForum local = subforum;
+            local.OwnedBy = user;
+            await _dbContext.SubForums.AddAsync(local);
             await _dbContext.SaveChangesAsync();
+            
             return subforum;
         }
         catch (Exception e)
@@ -78,7 +83,7 @@ public class ForumDAOImpl : IForumDAO
 
     public async Task DeleteSubForum(string id)
     {
-        SubForum? toDelete = _dbContext.SubForums.First(t=>t.Id.Equals(id));
+        SubForum toDelete = _dbContext.SubForums.First(t=>t.Id.Equals(id));
         if (toDelete is null)
         {
             throw new Exception($"Could not find sub-forum with id {id}. Nothing was deleted");
@@ -90,9 +95,17 @@ public class ForumDAOImpl : IForumDAO
 
     public async Task UpdateSubForum(SubForum subforum)
     {
-        _dbContext.SubForums.Update(subforum);
-        _dbContext.Entry(subforum).State = EntityState.Modified;
-        await _dbContext.SaveChangesAsync();
+        try
+        {
+            var entry = await _dbContext.SubForums.FirstAsync(e=>e.Id.Equals(subforum.Id));
+            _dbContext.Entry(entry).CurrentValues.SetValues(subforum);
+            await _dbContext.SaveChangesAsync();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e+" "+ e.StackTrace); // or log to file, etc.
+            throw; // re-throw the exception if you want it to continue up the stack
+        }
     }
 
     public async Task<ICollection<User>> GetUsersAsync()
@@ -102,19 +115,19 @@ public class ForumDAOImpl : IForumDAO
 
     public async Task<User> GetUserByID(string id)
     {
-        return await _dbContext.Users.FindAsync(id);
+        return await _dbContext.Users.AsNoTracking().FirstAsync(t => t.Id.Equals(id));
     }
 
     public async Task<User> GetUser(string username)
     {
-        return _dbContext.Users.First(t => t.UserName.Equals(username));
+        return await _dbContext.Users.AsNoTracking().FirstAsync(t => t.UserName.Equals(username));
     }
 
     public async Task<User> AddUser(User user)
     {
         EntityEntry<User> added = await _dbContext.Users.AddAsync(user);
         await _dbContext.SaveChangesAsync();
-        return added.Entity;
+        return null; // added.Entity;
     }
 
     public async Task DeleteUser(string id)
@@ -122,7 +135,7 @@ public class ForumDAOImpl : IForumDAO
         User? existing = await _dbContext.Users.FindAsync(id);
         if (existing is null)
         {
-            throw new Exception($"Could not find user with id {id}. Nothing was deleted");
+           throw new Exception($"Could not find user with id {id}. Nothing was deleted");
         }
         _dbContext.Users.Remove(existing);
         await _dbContext.SaveChangesAsync();
@@ -130,7 +143,7 @@ public class ForumDAOImpl : IForumDAO
 
     public async Task UpdateUser(User user)
     {
-        _dbContext.Users.Update(user);
-        _dbContext.SaveChangesAsync();
+        //_dbContext.Users.Update(user);
+        //_dbContext.SaveChangesAsync();
     }
 }

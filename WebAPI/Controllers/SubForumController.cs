@@ -83,6 +83,7 @@ public class SubForumController : ControllerBase
     [HttpPatch]
     public async Task<ActionResult> Update([FromBody] SubForum subForum)
     {
+        Console.WriteLine("???");
         try
         {
             await _subForumServiceImpl.UpdateSubForum(subForum);

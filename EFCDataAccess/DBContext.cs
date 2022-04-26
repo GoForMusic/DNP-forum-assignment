@@ -5,16 +5,17 @@ namespace EFCDataAccess;
 
 public class DBContext : DbContext
 {
-    public DbSet<User> Users { get; set; }
-    public DbSet<Vote> Votes { get; set; }
-    public DbSet<Comment> Comments { get; set; }
-    public DbSet<Post> Posts { get; set; }
-    public DbSet<SubForum> SubForums { get; set; }
+    public DbSet<User> Users { get; set; } = null!;
+    public DbSet<Vote> Votes { get; set; } = null!;
+    public DbSet<Comment> Comments { get; set; } = null!;
+    public DbSet<Post> Posts { get; set; } = null!;
+    public DbSet<SubForum> SubForums { get; set; } = null!;
     public DbSet<Forum> Forums { get; set; } = null!;
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseSqlite(@"Data Source = ..\EFCDataAccess\Forum.db");
+        optionsBuilder.EnableSensitiveDataLogging();
     }
 
     public void Seed()
