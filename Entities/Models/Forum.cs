@@ -1,9 +1,12 @@
-﻿namespace Entities.Models;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Entities.Models;
 
 public class Forum
 {
-    public ICollection<SubForum> SubForums { get; set; }
-    public ICollection<User> Users { get; set; }
+    [Key] public string Id { get; set; } = RandomIDGenerator.Generate(20);
+    public ICollection<SubForum>? SubForums { get; set; }
+    public ICollection<User>? Users { get; set; }
 
     public Forum()
     {

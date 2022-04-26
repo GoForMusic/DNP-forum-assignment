@@ -1,13 +1,15 @@
-﻿namespace Entities.Models;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Entities.Models;
 
 public class Vote
 {
-    public string Id { get; set; }
+    [Key] public string Id { get; set; } = RandomIDGenerator.Generate(20);
     public User Voter { get; set; }
 
     public Vote()
     {
-        Id= RandomIDGenerator.Generate(20);
         Voter = new User();
     }
 }

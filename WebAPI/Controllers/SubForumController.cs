@@ -51,7 +51,7 @@ public class SubForumController : ControllerBase
             {
                 //return a new list of elements base on the query
                 SubForum localForum = subForum;
-                localForum.Posts = subForum.Posts.FindAll(t=>t.Header.Contains(title));
+                localForum.Posts = subForum.Posts.Where(t=>t.Header.Contains(title)).ToList();
                 
                 return Ok(localForum);
             }
@@ -86,6 +86,7 @@ public class SubForumController : ControllerBase
         try
         {
             await _subForumServiceImpl.UpdateSubForum(subForum);
+            Console.WriteLine(Ok("Element updated: " + subForum.Id));
             return Ok("Element updated: " + subForum.Id);
         }
         catch (Exception e)

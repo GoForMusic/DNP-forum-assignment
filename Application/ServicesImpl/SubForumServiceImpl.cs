@@ -1,6 +1,4 @@
-﻿
-
-using Applicaiton.DAOInterfaces;
+﻿using Applicaiton.DAOInterfaces;
 using Contracts;
 using Entities.Models;
 

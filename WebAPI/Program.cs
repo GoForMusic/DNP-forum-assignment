@@ -1,8 +1,15 @@
 using Applicaiton.DAOInterfaces;
 using Applicaiton.ServiceImpl;
 using Contracts;
-using JsonDataAccess.DAOImpl;
-using JsonDataAccess.JsonContext;
+using EFCDataAccess;
+using EFCDataAccess.DAOImpl;
+
+
+using (DBContext ctx = new())
+{
+    ctx.Seed();
+}
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,9 +24,10 @@ builder.Services.AddSwaggerGen();
 //services login
 builder.Services.AddScoped<IUserService, UserServiceImpl>();
 builder.Services.AddScoped<ISubForumService, SubForumServiceImpl>();
-//file 
-builder.Services.AddScoped<FileContext>();
+//db 
 builder.Services.AddScoped<IForumDAO, ForumDAOImpl>();
+builder.Services.AddDbContext<DBContext>();
+
 
 var app = builder.Build();
 

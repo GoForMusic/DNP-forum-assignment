@@ -1,15 +1,19 @@
-﻿namespace Entities.Models;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Entities.Models;
 
 public class Comment
 {
-    public string Id { get; set; }
+    [Key] 
+    public string Id { get; set; } = RandomIDGenerator.Generate(20);
+    [Required]
     public string Body { get; set; }
-    public List<Vote> Votes { get; set; }
-    public User WrittenBy { get; set; }
+    public ICollection<Vote>? Votes { get; set; }
+    public User? WrittenBy { get; set; }
 
     public Comment()
     {
-        Id = RandomIDGenerator.Generate(20);
         Body = String.Empty;
         Votes = new List<Vote>();
         WrittenBy = new User();
