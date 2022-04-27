@@ -80,8 +80,7 @@ public class ForumDAOImpl : IForumDAO
             throw; // re-throw the exception if you want it to continue up the stack
         }
     }
-
-
+    
     public async Task DeleteSubForum(string id)
     {
         SubForum toDelete = _dbContext.SubForums.First(t=>t.Id.Equals(id));
@@ -99,31 +98,72 @@ public class ForumDAOImpl : IForumDAO
     {
         try
         {
-
-
-            Forum forum = await _dbContext.Forums.FirstAsync();
-            forum.SubForums = await GetSubForumAsync();
-            forum.Users = await GetUsersAsync();
-            foreach (var item in forum.SubForums.Where(t=>t.Id.Equals(subforum.Id)))
-            {
-                _dbContext.Posts.UpdateRange(subforum.Posts);
-            }
+            SubForum localSubForum = await GetSubForumByID(subforum.Id);
+            localSubForum.Description = subforum.Description;
+            localSubForum.Title = subforum.Title;
+            localSubForum.OwnedBy = await GetUserByID(subforum.OwnedBy.Id);
+            localSubForum.Posts = await _dbContext.Posts.ToListAsync();
             
-            
-            foreach (var item in forum.SubForums.Where(t=>t.Id.Equals(subforum.Id)).First().Posts)
+            //post
+            foreach (var item in subforum.Posts)
             {
-                Console.WriteLine(item.Id + " " + item.Header);
-                Console.WriteLine(item.WrittenBy.Id);
-                Console.WriteLine(item.Votes.Count);
-                foreach (var item2 in item.Comments)
+                Post? localPost = await _dbContext.Posts.FirstOrDefaultAsync(t => t.Id.Equals(item.Id));
+                if (localPost == null)
                 {
-                    Console.WriteLine(item2.Id + " " + item2.Body);
-                    Console.WriteLine(item2.WrittenBy.Id);
-                    Console.WriteLine(item2.Votes.Count);
+                    
+                }
+                else
+                {
+                    Console.WriteLine(item.Header+"_____2");
+                    //post details
+                    localPost.date_posted = item.date_posted;
+                    localPost.Body = item.Body;
+                    localPost.Header = item.Header;
+                    localPost.WrittenBy = await GetUserByID(item.WrittenBy.Id);
+                    //comments details
+                    foreach (var item2 in item.Comments)
+                    {
+                        Comment? localComment =
+                            await _dbContext.Comments.FirstOrDefaultAsync(t => t.Id.Equals(item2.Id));
+                        if (localComment == null)
+                        {
+                            _dbContext.Comments.Add(item2);
+                        }
+                        else
+                        {
+                            localComment.Body = item2.Body;
+                            localComment.WrittenBy = await GetUserByID(item2.WrittenBy.Id);
+                            //vote
+                            foreach (var item3 in item2.Votes)
+                            {
+                                Vote? localVote = await _dbContext.Votes.FirstOrDefaultAsync(t => t.Id.Equals(item3.Id));
+                                if (localVote == null)
+                                {
+                                    _dbContext.Votes.Add(item3);
+                                }
+                                else
+                                {
+                                    localVote.Voter = await GetUserByID(item3.Voter.Id);
+                                }
+                            }
+                            
+                        }
+                    }
+                    //vote details
+                    foreach (var item2 in item.Votes)
+                    {
+                        Vote? localVote = await _dbContext.Votes.FirstOrDefaultAsync(t => t.Id.Equals(item2.Id));
+                        if (localVote == null)
+                        {
+                            _dbContext.Votes.Add(item2);
+                        }
+                        else
+                        {
+                            localVote.Voter = await GetUserByID(item2.Voter.Id);
+                        }
+                    }
                 }
             }
-
-
             
             //_dbContext.Forums.Update(forum);
             await _dbContext.SaveChangesAsync();
