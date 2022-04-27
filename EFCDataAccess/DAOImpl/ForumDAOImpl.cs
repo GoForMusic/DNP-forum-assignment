@@ -1,4 +1,5 @@
-﻿using Applicaiton.DAOInterfaces;
+﻿using System.Collections;
+using Applicaiton.DAOInterfaces;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -93,12 +94,38 @@ public class ForumDAOImpl : IForumDAO
         await _dbContext.SaveChangesAsync();
     }
 
+   
     public async Task UpdateSubForum(SubForum subforum)
     {
         try
         {
-            var entry = await _dbContext.SubForums.FirstAsync(e=>e.Id.Equals(subforum.Id));
-            _dbContext.Entry(entry).CurrentValues.SetValues(subforum);
+
+
+            Forum forum = await _dbContext.Forums.FirstAsync();
+            forum.SubForums = await GetSubForumAsync();
+            forum.Users = await GetUsersAsync();
+            foreach (var item in forum.SubForums.Where(t=>t.Id.Equals(subforum.Id)))
+            {
+                _dbContext.Posts.UpdateRange(subforum.Posts);
+            }
+            
+            
+            foreach (var item in forum.SubForums.Where(t=>t.Id.Equals(subforum.Id)).First().Posts)
+            {
+                Console.WriteLine(item.Id + " " + item.Header);
+                Console.WriteLine(item.WrittenBy.Id);
+                Console.WriteLine(item.Votes.Count);
+                foreach (var item2 in item.Comments)
+                {
+                    Console.WriteLine(item2.Id + " " + item2.Body);
+                    Console.WriteLine(item2.WrittenBy.Id);
+                    Console.WriteLine(item2.Votes.Count);
+                }
+            }
+
+
+            
+            //_dbContext.Forums.Update(forum);
             await _dbContext.SaveChangesAsync();
         }
         catch (Exception e)
@@ -115,19 +142,38 @@ public class ForumDAOImpl : IForumDAO
 
     public async Task<User> GetUserByID(string id)
     {
-        return await _dbContext.Users.AsNoTracking().FirstAsync(t => t.Id.Equals(id));
+        try
+        {
+            return await _dbContext.Users.FirstAsync(t => t.Id.Equals(id));
+        }catch (Exception e)
+        {
+            Console.WriteLine(e+" "+ e.StackTrace); // or log to file, etc.
+            throw; // re-throw the exception if you want it to continue up the stack
+        }
     }
 
     public async Task<User> GetUser(string username)
     {
-        return await _dbContext.Users.AsNoTracking().FirstAsync(t => t.UserName.Equals(username));
+        try{
+            return await _dbContext.Users.FirstAsync(t => t.UserName.Equals(username));
+        }catch (Exception e)
+        {
+            Console.WriteLine(e+" "+ e.StackTrace); // or log to file, etc.
+            throw; // re-throw the exception if you want it to continue up the stack
+        }
     }
 
     public async Task<User> AddUser(User user)
     {
-        EntityEntry<User> added = await _dbContext.Users.AddAsync(user);
-        await _dbContext.SaveChangesAsync();
-        return null; // added.Entity;
+        try{
+            EntityEntry<User> added = await _dbContext.Users.AddAsync(user);
+            await _dbContext.SaveChangesAsync();
+            return added.Entity;
+        }catch (Exception e)
+        {
+            Console.WriteLine(e+" "+ e.StackTrace); // or log to file, etc.
+            throw; // re-throw the exception if you want it to continue up the stack
+        }
     }
 
     public async Task DeleteUser(string id)
@@ -143,7 +189,7 @@ public class ForumDAOImpl : IForumDAO
 
     public async Task UpdateUser(User user)
     {
-        //_dbContext.Users.Update(user);
-        //_dbContext.SaveChangesAsync();
+        _dbContext.Users.Update(user);
+        await _dbContext.SaveChangesAsync();
     }
 }

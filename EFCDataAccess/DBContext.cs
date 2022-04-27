@@ -55,7 +55,7 @@ public class DBContext : DbContext
         forum.Users = users;
         forum.SubForums = subForums;
         Forums.AddRange(forum);
-        SaveChanges();
+        SaveChangesAsync();
     }
     
     
