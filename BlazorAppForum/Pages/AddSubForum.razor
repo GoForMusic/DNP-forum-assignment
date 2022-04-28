@@ -90,7 +90,7 @@
             else
             {
                 subForum.OwnedBy = _user;
-                await _subForumService.AddSubForum(subForum);
+                await _subForumService.AddElementAsync(subForum);
                 Navigation.NavigateTo("/subforum/"+subForum.Id,true);
             }
         }

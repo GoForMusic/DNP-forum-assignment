@@ -97,7 +97,7 @@
             {
                 newUserItem.Role = "User";
                 newUserItem.BirthDate = today;
-                await _userService.AddUser(newUserItem);
+                await _userService.AddElementAsync(newUserItem);
                 NavigationManager.NavigateTo("/",true);
             }
             

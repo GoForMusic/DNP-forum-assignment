@@ -6,7 +6,7 @@ namespace RESTClient;
 
 public class UserHttpService : IUserService
 {
-    public async Task<ICollection<User>> GetUsersAsync()
+    public async Task<ICollection<User>> GetListAsync()
     {
         try
         {
@@ -24,7 +24,7 @@ public class UserHttpService : IUserService
         }
     }
 
-    public async Task<User> GetUserByID(string id)
+    public async Task<User> GetElementAsync(string id)
     {
         try
         {
@@ -60,7 +60,7 @@ public class UserHttpService : IUserService
         }
     }
 
-    public async Task<User> AddUser(User user)
+    public async Task<User> AddElementAsync(User user)
     {
         try
         {
@@ -78,7 +78,7 @@ public class UserHttpService : IUserService
         }
     }
 
-    public async Task DeleteUser(string id)
+    public async Task DeleteElementAsync(string id)
     {
         try
         {
@@ -90,7 +90,7 @@ public class UserHttpService : IUserService
         }
     }
 
-    public async Task UpdateUser(User user)
+    public async Task UpdateElementAsync(User user)
     {
         try
         {

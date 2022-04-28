@@ -15,12 +15,12 @@ public class UserServiceImpl : IUserService
         this._forumDao = _forumDao;
     }
     
-    public async Task<ICollection<User>> GetUsersAsync()
+    public async Task<ICollection<User>> GetListAsync()
     {
         return await _forumDao.GetUsersAsync();
     }
 
-    public async Task<User> GetUserByID(string id)
+    public async Task<User> GetElementAsync(string id)
     {
         return await _forumDao.GetUserByID(id);
     }
@@ -30,18 +30,18 @@ public class UserServiceImpl : IUserService
         return await _forumDao.GetUser(username);
     }
 
-    public async Task<User> AddUser(User user)
+    public async Task<User> AddElementAsync(User user)
     {
         user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
         return await _forumDao.AddUser(user);
     }
 
-    public async Task DeleteUser(string id)
+    public async Task DeleteElementAsync(string id)
     {
         await _forumDao.DeleteUser(id);
     }
 
-    public async Task UpdateUser(User user)
+    public async Task UpdateElementAsync(User user)
     {
         await _forumDao.UpdateUser(user);
     }

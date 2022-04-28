@@ -24,7 +24,7 @@ public class SubForumController : ControllerBase
     {
         try
         {
-            ICollection<SubForum> subForums = await _subForumServiceImpl.GetSubForumAsync();
+            ICollection<SubForum> subForums = await _subForumServiceImpl.GetListAsync();
             return Ok(subForums);
         }
         catch (Exception e)
@@ -46,7 +46,7 @@ public class SubForumController : ControllerBase
     {
         try
         {
-            SubForum subForum = await _subForumServiceImpl.GetSubForumByID(id);
+            SubForum subForum = await _subForumServiceImpl.GetElementAsync(id);
             if (title != null)
             {
                 //return a new list of elements base on the query
@@ -70,7 +70,7 @@ public class SubForumController : ControllerBase
     {
         try
         {
-            await _subForumServiceImpl.DeleteSubForum(id);
+            await _subForumServiceImpl.DeleteElementAsync(id);
             return Ok("Element deleted: " + id);
         }
         catch (Exception e)
@@ -86,7 +86,7 @@ public class SubForumController : ControllerBase
         Console.WriteLine("???");
         try
         {
-            await _subForumServiceImpl.UpdateSubForum(subForum);
+            await _subForumServiceImpl.UpdateElementAsync(subForum);
             Console.WriteLine(Ok("Element updated: " + subForum.Id));
             return Ok("Element updated: " + subForum.Id);
         }
@@ -102,7 +102,7 @@ public class SubForumController : ControllerBase
     {
         try
         {
-            SubForum added = await _subForumServiceImpl.AddSubForum(subForum);
+            SubForum added = await _subForumServiceImpl.AddElementAsync(subForum);
             return Created($"/todos/{added.Id}", added);
         }
         catch (Exception e)

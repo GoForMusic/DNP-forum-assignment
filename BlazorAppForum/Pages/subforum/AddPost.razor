@@ -73,7 +73,7 @@
     {
         try
         {
-            subForum = await _subForumService.GetSubForumByID(Id);
+            subForum = await _subForumService.GetElementAsync(Id);
 
             AuthenticationState authState = await AuthState;
             ClaimsPrincipal user = authState.User;
@@ -103,10 +103,10 @@
             {
                 _post.WrittenBy = _user;
                 _post.date_posted = DateTime.Today;
-                subForum = await _subForumService.GetSubForumByID(Id);
+                subForum = await _subForumService.GetElementAsync(Id);
                 subForum.Posts.Add(_post);
             
-                await _subForumService.UpdateSubForum(subForum);
+                await _subForumService.UpdateElementAsync(subForum);
                 Navigation.NavigateTo("/subforum/"+Id,true);
             }
         }

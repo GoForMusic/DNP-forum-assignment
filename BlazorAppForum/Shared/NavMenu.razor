@@ -65,7 +65,7 @@
     {
         try
         {
-            _subForums = await _forumService.GetSubForumAsync();
+            _subForums = await _forumService.GetListAsync();
         }
         catch (Exception e)
         {

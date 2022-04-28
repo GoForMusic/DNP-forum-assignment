@@ -6,7 +6,7 @@ namespace RESTClient;
 
 public class SubForumHttpService : ISubForumService
 {
-    public async Task<ICollection<SubForum>> GetSubForumAsync()
+    public async Task<ICollection<SubForum>> GetListAsync()
     {
         try
         {
@@ -24,7 +24,7 @@ public class SubForumHttpService : ISubForumService
         }
     }
 
-    public async Task<SubForum> GetSubForumByID(string id)
+    public async Task<SubForum> GetElementAsync(string id)
     {
         try
         {
@@ -60,7 +60,7 @@ public class SubForumHttpService : ISubForumService
         }
     }
 
-    public async Task<SubForum> AddSubForum(SubForum subforum)
+    public async Task<SubForum> AddElementAsync(SubForum subforum)
     {
         try
         {
@@ -78,7 +78,7 @@ public class SubForumHttpService : ISubForumService
         }
     }
 
-    public async Task DeleteSubForum(string id)
+    public async Task DeleteElementAsync(string id)
     {
         try
         {
@@ -90,7 +90,7 @@ public class SubForumHttpService : ISubForumService
         }
     }
 
-    public async Task UpdateSubForum(SubForum subforum)
+    public async Task UpdateElementAsync(SubForum subforum)
     {
         try
         {

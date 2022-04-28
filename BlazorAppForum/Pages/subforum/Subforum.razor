@@ -210,7 +210,7 @@ else
     private async Task removePost(Post post)
     {
         subForum.Posts.Remove(post);
-        await _subForumService.UpdateSubForum(subForum);
+        await _subForumService.UpdateElementAsync(subForum);
     }
     
     //MODAL editor
@@ -231,7 +231,7 @@ else
             Post localPost = _postsCollection.First((t => t.Id.Equals(editId)));
             localPost.Header = editedTitle;
             localPost.Body = editBody;
-            await _subForumService.UpdateSubForum(subForum);
+            await _subForumService.UpdateElementAsync(subForum);
             showModal = false;
         }
         catch (Exception e)
@@ -251,7 +251,7 @@ else
                 local.Voter = _user;
                 item.Votes.Add(local);
                 Console.WriteLine(item.Votes.Count);
-                await _subForumService.UpdateSubForum(subForum);
+                await _subForumService.UpdateElementAsync(subForum);
             }
         }
 
@@ -274,7 +274,7 @@ else
 
     private async Task GetNormal()
     {
-        subForum = await _subForumService.GetSubForumByID(Id);
+        subForum = await _subForumService.GetElementAsync(Id);
         _postsCollection = subForum.Posts;
     }
 }

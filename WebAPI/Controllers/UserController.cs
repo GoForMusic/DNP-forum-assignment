@@ -21,7 +21,7 @@ public class UserController : ControllerBase
     {
         try
         {
-            ICollection<User> users = await _userService.GetUsersAsync();
+            ICollection<User> users = await _userService.GetListAsync();
             return Ok(users);
         }
         catch (Exception e)
@@ -37,7 +37,7 @@ public class UserController : ControllerBase
     {
         try
         {
-            User user = await _userService.GetUserByID(id);
+            User user = await _userService.GetElementAsync(id);
             return Ok(user);
         }
         catch (Exception e)
@@ -69,7 +69,7 @@ public class UserController : ControllerBase
     {
         try
         {
-            await _userService.DeleteUser(id);
+            await _userService.DeleteElementAsync(id);
             return Ok("Element deleted: " + id);
         }
         catch (Exception e)
@@ -84,7 +84,7 @@ public class UserController : ControllerBase
     {
         try
         {
-            await _userService.UpdateUser(user);
+            await _userService.UpdateElementAsync(user);
             return Ok("Element updated: " + user.Id);
         }
         catch (Exception e)
@@ -99,7 +99,7 @@ public class UserController : ControllerBase
     {
         try
         {
-            User added = await _userService.AddUser(user);
+            User added = await _userService.AddElementAsync(user);
             return Created($"/todos/{added.Id}", added);
         }
         catch (Exception e)

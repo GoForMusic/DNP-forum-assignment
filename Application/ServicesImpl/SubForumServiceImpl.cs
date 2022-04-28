@@ -13,12 +13,12 @@ public class SubForumServiceImpl : ISubForumService
         this._forumDao = _forumDao;
     }
     
-    public async Task<ICollection<SubForum>> GetSubForumAsync()
+    public async Task<ICollection<SubForum>> GetListAsync()
     {
         return await _forumDao.GetSubForumAsync();
     }
 
-    public async Task<SubForum> GetSubForumByID(string id)
+    public async Task<SubForum> GetElementAsync(string id)
     {
         return await _forumDao.GetSubForumByID(id);
     }
@@ -28,17 +28,17 @@ public class SubForumServiceImpl : ISubForumService
         return await _forumDao.GetSubForumByID(id);
     }
 
-    public async Task<SubForum> AddSubForum(SubForum subforum)
+    public async Task<SubForum> AddElementAsync(SubForum subforum)
     {
         return await _forumDao.AddSubForum(subforum);
     }
 
-    public async Task DeleteSubForum(string id)
+    public async Task DeleteElementAsync(string id)
     {
         await _forumDao.DeleteSubForum(id);
     }
 
-    public async Task UpdateSubForum(SubForum subforum)
+    public async Task UpdateElementAsync(SubForum subforum)
     {
         await _forumDao.UpdateSubForum(subforum);
     }
