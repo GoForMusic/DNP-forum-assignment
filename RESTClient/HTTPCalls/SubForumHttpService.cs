@@ -94,7 +94,7 @@ public class SubForumHttpService : ISubForumService
     {
         try
         {
-            await ServerAPI.getContent(Methods.Patch,"/subforum3", subforum);
+            await ServerAPI.getContent(Methods.Patch,"/subforum", subforum);
         }
         catch (Exception e)
         {

@@ -64,6 +64,10 @@ public class ServerAPI
                 stringContent = new(JsonSerializer.Serialize(element), Encoding.UTF8, "application/json");
                 response = await client.PatchAsync(host + endpoint, stringContent);
                 content = await response.Content.ReadAsStringAsync();
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new Exception($"Error: {response.StatusCode}, {content}");
+                }
                 break;
         }
 

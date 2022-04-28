@@ -104,9 +104,9 @@
             {
                 _post.WrittenBy = _user;
                 _post.date_posted = DateTime.Today;
-                subForum.Posts.Add(_post);
-                //await _postSerivce.AddElementAsync(_post);
-                await _subForumService.UpdateElementAsync(subForum);
+                _post.SubForumId =Id;
+                await _postSerivce.AddElementAsync(_post);
+                
                 Navigation.NavigateTo("/subforum/"+Id,true);
             }
         }

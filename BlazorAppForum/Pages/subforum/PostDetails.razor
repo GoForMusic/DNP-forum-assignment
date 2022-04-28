@@ -5,6 +5,9 @@
 @using Entities.Models
 
 @inject ISubForumService _subForumService
+@inject ICommentService _CommentService;
+@inject IPostSerivce _PostService;
+@inject IVoteService _VoteService;
 @inject NavigationManager Navigation
 @inject IUserService _userService;
 
@@ -312,13 +315,13 @@
     private async Task removeComment(Comment comment)
     {
         subForum.Posts.First(t=>t.Id.Equals(_post.Id)).Comments.Remove(comment);
-        await _subForumService.UpdateElementAsync(subForum);
+        await _CommentService.DeleteElementAsync(comment.Id);
     }
     
     private async Task removePost(Post post)
     {
         subForum.Posts.Remove(post);
-        await _subForumService.UpdateElementAsync(subForum);
+        await _PostService.DeleteElementAsync(post.Id);
         Navigation.NavigateTo("/subforum/"+subForum.Id,true);
     }
     
@@ -331,8 +334,9 @@
             Comment localComment = new Comment();
             localComment.Body = editComment;
             localComment.WrittenBy = _user;
+            localComment.PostId = IdPost;
             subForum.Posts.First(t=>t.Id.Equals(IdPost)).Comments.Add(localComment);
-            await _subForumService.UpdateElementAsync(subForum);
+            await _CommentService.AddElementAsync(localComment);
             showModalComment = false;
         }
         catch (Exception e)
@@ -365,7 +369,8 @@
             Post localPost = subForum.Posts.First((t => t.Id.Equals(editId)));
             localPost.Header = editedTitle;
             localPost.Body = editBody;
-            await _subForumService.UpdateElementAsync(subForum);
+            localPost.SubForumId = IdForum;
+            await _PostService.UpdateElementAsync(localPost);
             showModal = false;
         }
         catch (Exception e)
@@ -380,7 +385,8 @@
         {
             Comment localComment = subForum.Posts.First((t => t.Id.Equals(IdPost))).Comments.First(t=>t.Id.Equals(editCommentId));
             localComment.Body = editComment;
-            await _subForumService.UpdateElementAsync(subForum);
+            localComment.PostId = IdPost;
+            await _CommentService.UpdateElementAsync(localComment);
             showModalComment = false;
         }
         catch (Exception e)
@@ -398,8 +404,10 @@
             {
                 Vote local = new Vote();
                 local.Voter = _user;
+                local.PostId = IdPost;
+                local.CommentId = null;
                 item.Votes.Add(local);
-                await _subForumService.UpdateElementAsync(subForum);
+                await _VoteService.AddElementAsync(local);
             }
         }
 
@@ -412,8 +420,10 @@
             {
                 Vote local = new Vote();
                 local.Voter = _user;
+                local.CommentId = item.Id;
+                local.PostId = null;
                 item.Votes.Add(local);
-                await _subForumService.UpdateElementAsync(subForum);
+                await _VoteService.AddElementAsync(local);
             }
         }
 

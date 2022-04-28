@@ -48,9 +48,12 @@ public class CommentDAOImpl : ICommentDAO
     {
         try
         {
-            EntityEntry<Comment> added = await _db.AddAsync(comment);
+            Comment? added = comment;
+            added.WrittenBy = await _db.Users.FirstAsync(t=>t.Id.Equals(comment.WrittenBy.Id));
+            added.Votes = new List<Vote>();
+            await _db.Comments.AddAsync(added);
             await _db.SaveChangesAsync();
-            return added.Entity;
+            return added;
         }
         catch (Exception e)
         {
@@ -61,20 +64,31 @@ public class CommentDAOImpl : ICommentDAO
 
     public async Task DeleteElementAsync(string id)
     {
-        Comment? existing = await _db.Comments.FindAsync(id);
-        if (existing is null)
+        try
         {
-            throw new Exception($"Could not find Todo with id {id}. Nothing was deleted");
-        }
+            Comment? existing = await _db.Comments.FindAsync(id);
+            if (existing is null)
+            {
+                throw new Exception($"Could not find Todo with id {id}. Nothing was deleted");
+            }
 
-        _db.Comments.Remove(existing);
-        await _db.SaveChangesAsync();
+            _db.Votes.RemoveRange(existing.Votes);
+            _db.Comments.Remove(existing);
+            await _db.SaveChangesAsync();
+        }catch (Exception e)
+        {
+            Console.WriteLine(e.Message+" "+ e.StackTrace); // or log to file, etc.
+            throw; // re-throw the exception if you want it to continue up the stack
+        }
     }
 
     public async Task UpdateElementAsync(Comment comment)
     {
         try
         {
+            Comment? localPost = comment;
+            localPost.WrittenBy = await _db.Users.FirstAsync(t => t.Id.Equals(comment.WrittenBy.Id));
+            localPost.Votes = await _db.Votes.Where(t => t.CommentId.Equals(comment.Id)).ToListAsync();
             _db.Comments.Update(comment);
             await _db.SaveChangesAsync();
         }

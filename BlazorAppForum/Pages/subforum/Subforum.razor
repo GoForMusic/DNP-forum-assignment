@@ -3,8 +3,11 @@
 @using System.Security.Claims
 @using Contracts
 @using Entities.Models
+@using Microsoft.AspNetCore.Mvc
 
 @inject ISubForumService _subForumService
+@inject IVoteService _VoteService;
+@inject IPostSerivce _PostService;
 @inject NavigationManager Navigation
 @inject IUserService _userService
 
@@ -209,8 +212,8 @@ else
 
     private async Task removePost(Post post)
     {
-        subForum.Posts.Remove(post);
-        await _subForumService.UpdateElementAsync(subForum);
+        await _PostService.DeleteElementAsync(post.Id);
+        Navigation.NavigateTo("/subforum/"+Id,true);
     }
     
     //MODAL editor
@@ -231,7 +234,8 @@ else
             Post localPost = _postsCollection.First((t => t.Id.Equals(editId)));
             localPost.Header = editedTitle;
             localPost.Body = editBody;
-            await _subForumService.UpdateElementAsync(subForum);
+            localPost.SubForumId = Id;
+            await _PostService.UpdateElementAsync(localPost);
             showModal = false;
         }
         catch (Exception e)
@@ -249,9 +253,10 @@ else
             {
                 Vote local = new Vote();
                 local.Voter = _user;
+                local.PostId = Id;
+                local.CommentId = null;
                 item.Votes.Add(local);
-                Console.WriteLine(item.Votes.Count);
-                await _subForumService.UpdateElementAsync(subForum);
+                await _VoteService.AddElementAsync(local);
             }
         }
 
@@ -276,5 +281,6 @@ else
     {
         subForum = await _subForumService.GetElementAsync(Id);
         _postsCollection = subForum.Posts;
+        
     }
 }

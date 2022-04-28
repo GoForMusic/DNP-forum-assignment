@@ -13,8 +13,10 @@ public class Post
     public string Body { get; set; }
     public ICollection<Vote>? Votes { get; set; }
     public ICollection<Comment>? Comments { get; set; }
-    public User? WrittenBy { get; set; }
+    public User WrittenBy { get; set; }
     public DateTime? date_posted { get; set; }
+    [ForeignKey("SubForum")]
+    public string SubForumId { get; set; }
 
     public Post()
     {

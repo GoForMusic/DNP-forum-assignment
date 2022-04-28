@@ -46,7 +46,7 @@ public class PostDAOImpl: IPostDAO
     {
         try
         {
-            Post added = post;
+            Post? added = post;
             added.WrittenBy = await _db.Users.FirstAsync(t=>t.Id.Equals(post.WrittenBy.Id));
             added.Comments = new List<Comment>();
             added.Votes = new List<Vote>();
@@ -63,20 +63,33 @@ public class PostDAOImpl: IPostDAO
 
     public async Task DeleteElementAsync(string id)
     {
-        Post? existing = await _db.Posts.FindAsync(id);
-        if (existing is null)
-        {
-            throw new Exception($"Could not find Todo with id {id}. Nothing was deleted");
-        }
+        try{
+            Post? existing = await _db.Posts.FindAsync(id);
+            if (existing is null)
+            {
+                throw new Exception($"Could not find Todo with id {id}. Nothing was deleted");
+            }
 
-        _db.Posts.Remove(existing);
-        await _db.SaveChangesAsync();
+            
+            _db.Votes.RemoveRange(existing.Votes);
+            _db.Comments.RemoveRange(existing.Comments);
+            _db.Posts.Remove(existing);
+            await _db.SaveChangesAsync();
+        }catch (Exception e)
+        {
+            Console.WriteLine(e.Message+" "+ e.StackTrace); // or log to file, etc.
+            throw; // re-throw the exception if you want it to continue up the stack
+        }
     }
 
     public async Task UpdateElementAsync(Post post)
     {
         try
         {
+            Post? localPost = post;
+            localPost.Comments = await _db.Comments.Where(t => t.PostId.Equals(post.Id)).ToListAsync();
+            localPost.WrittenBy = await _db.Users.FirstAsync(t => t.Id.Equals(post.WrittenBy.Id));
+            localPost.Votes = await _db.Votes.Where(t => t.PostId.Equals(post.Id)).ToListAsync();
             _db.Posts.Update(post);
             await _db.SaveChangesAsync();
         }

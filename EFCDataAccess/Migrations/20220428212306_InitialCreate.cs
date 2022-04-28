@@ -48,8 +48,8 @@ namespace EFCDataAccess.Migrations
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
                     OwnedById = table.Column<string>(type: "TEXT", nullable: true),
-                    Title = table.Column<string>(type: "TEXT", nullable: true),
-                    Description = table.Column<string>(type: "TEXT", nullable: true),
+                    Title = table.Column<string>(type: "TEXT", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: false),
                     ForumId = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
@@ -76,7 +76,7 @@ namespace EFCDataAccess.Migrations
                     Body = table.Column<string>(type: "TEXT", nullable: false),
                     WrittenById = table.Column<string>(type: "TEXT", nullable: true),
                     date_posted = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    SubForumId = table.Column<string>(type: "TEXT", nullable: true)
+                    SubForumId = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -85,7 +85,8 @@ namespace EFCDataAccess.Migrations
                         name: "FK_Posts_SubForums_SubForumId",
                         column: x => x.SubForumId,
                         principalTable: "SubForums",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Posts_Users_WrittenById",
                         column: x => x.WrittenById,
@@ -100,7 +101,7 @@ namespace EFCDataAccess.Migrations
                     Id = table.Column<string>(type: "TEXT", nullable: false),
                     Body = table.Column<string>(type: "TEXT", nullable: false),
                     WrittenById = table.Column<string>(type: "TEXT", nullable: true),
-                    PostId = table.Column<string>(type: "TEXT", nullable: true)
+                    PostId = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -109,7 +110,8 @@ namespace EFCDataAccess.Migrations
                         name: "FK_Comments_Posts_PostId",
                         column: x => x.PostId,
                         principalTable: "Posts",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Comments_Users_WrittenById",
                         column: x => x.WrittenById,

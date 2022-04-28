@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EFCDataAccess.Migrations
 {
     [DbContext(typeof(DBContext))]
-    [Migration("20220426123244_InitialCreate")]
+    [Migration("20220428212306_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,6 +29,7 @@ namespace EFCDataAccess.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PostId")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("WrittenById")
@@ -67,6 +68,7 @@ namespace EFCDataAccess.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("SubForumId")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("WrittenById")
@@ -90,6 +92,7 @@ namespace EFCDataAccess.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ForumId")
@@ -99,6 +102,7 @@ namespace EFCDataAccess.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -174,7 +178,9 @@ namespace EFCDataAccess.Migrations
                 {
                     b.HasOne("Entities.Models.Post", null)
                         .WithMany("Comments")
-                        .HasForeignKey("PostId");
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Entities.Models.User", "WrittenBy")
                         .WithMany()
@@ -187,7 +193,9 @@ namespace EFCDataAccess.Migrations
                 {
                     b.HasOne("Entities.Models.SubForum", null)
                         .WithMany("Posts")
-                        .HasForeignKey("SubForumId");
+                        .HasForeignKey("SubForumId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Entities.Models.User", "WrittenBy")
                         .WithMany()

@@ -10,7 +10,9 @@ public class Comment
     [Required]
     public string Body { get; set; }
     public ICollection<Vote>? Votes { get; set; }
-    public User? WrittenBy { get; set; }
+    public User WrittenBy { get; set; }
+    [ForeignKey("Post")]
+    public string PostId { get; set; }
 
     public Comment()
     {

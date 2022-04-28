@@ -18,15 +18,23 @@ public class SubForumDAOImpl : ISubForumDAO
         try
         {
             //kinda mess????
-            return await _db.SubForums.Include(f => f.OwnedBy).Include(f => f.Posts)
-                .ThenInclude(f => f.WrittenBy).Include(f => f.Posts)
+            return await _db.SubForums.
+                Include(f => f.OwnedBy).
+                Include(f => f.Posts)
+                .ThenInclude(f => f.WrittenBy).
+                Include(f => f.Posts)
                 .ThenInclude(f => f.Comments)
-                .ThenInclude(f => f.WrittenBy).Include(f => f.Posts)
+                .ThenInclude(f => f.WrittenBy).
+                Include(f => f.Posts)
                 .ThenInclude(f => f.Comments)
                 .ThenInclude(f => f.Votes)
-                .ThenInclude(f => f.Voter).Include(f => f.Posts)
+                .ThenInclude(f => f.Voter).
+                Include(f => f.Posts)
                 .ThenInclude(f => f.Comments)
-                .ThenInclude(f => f.WrittenBy).ToListAsync();
+                .ThenInclude(f => f.WrittenBy).
+                Include(t=>t.Posts)
+                .ThenInclude(t=>t.Votes)
+                .ThenInclude(t=>t.Voter).ToListAsync();
         }
         catch (Exception e)
         {
@@ -40,15 +48,23 @@ public class SubForumDAOImpl : ISubForumDAO
         try
         {
             //Mess as well
-            return await _db.SubForums.Include(f => f.OwnedBy).Include(f => f.Posts)
-                .ThenInclude(f => f.WrittenBy).Include(f => f.Posts)
+            return await _db.SubForums.
+                Include(f => f.OwnedBy).
+                Include(f => f.Posts)
+                .ThenInclude(f => f.WrittenBy).
+                Include(f => f.Posts)
                 .ThenInclude(f => f.Comments)
-                .ThenInclude(f => f.WrittenBy).Include(f => f.Posts)
+                .ThenInclude(f => f.WrittenBy).
+                Include(f => f.Posts)
                 .ThenInclude(f => f.Comments)
                 .ThenInclude(f => f.Votes)
-                .ThenInclude(f => f.Voter).Include(f => f.Posts)
+                .ThenInclude(f => f.Voter).
+                Include(f => f.Posts)
                 .ThenInclude(f => f.Comments)
-                .ThenInclude(f => f.WrittenBy).FirstAsync(f=>f.Id==id);
+                .ThenInclude(f => f.WrittenBy).
+                Include(t=>t.Posts)
+                .ThenInclude(t=>t.Votes)
+                .ThenInclude(t=>t.Voter).FirstAsync(f=>f.Id.Equals(id));
         }
         catch (Exception e)
         {
@@ -89,14 +105,19 @@ public class SubForumDAOImpl : ISubForumDAO
 
     public async Task UpdateElementAsync(SubForum subforum)
     {
-        Console.WriteLine(subforum.Title + subforum.Posts.First().Id);
-        Console.WriteLine("-0---");
-        SubForum toUpdate = await GetElementAsync(subforum.Id);
-        toUpdate.OwnedBy = await _db.Users.FindAsync(subforum.OwnedBy.Id);
-        toUpdate.Posts = await _db.Posts.ToListAsync();
-        toUpdate.Posts.Add(subforum.Posts.Single());
-        _db.SubForums.Update(toUpdate);
-        await _db.SaveChangesAsync();
+        try
+        {
+            SubForum? localPost = subforum;
+            localPost.OwnedBy =  await _db.Users.FirstAsync(t => t.Id.Equals(subforum.OwnedBy.Id));
+            localPost.Posts = await _db.Posts.Where(t => t.SubForumId.Equals(subforum.Id)).ToListAsync();
+            _db.SubForums.Update(localPost);
+            await _db.SaveChangesAsync();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e+" "+ e.StackTrace); // or log to file, etc.
+            throw; // re-throw the exception if you want it to continue up the stack
+        }
     }
 
     public async Task<SubForum> GetSubForumByFilter(string id, string title)
