@@ -1,5 +1,5 @@
-using Applicaiton.DAOInterfaces;
 using Applicaiton.ServiceImpl;
+using Application.DAOInterfaces;
 using Contracts;
 using EFCDataAccess;
 using EFCDataAccess.DAOImpl;
@@ -24,8 +24,18 @@ builder.Services.AddSwaggerGen();
 //services login
 builder.Services.AddScoped<IUserService, UserServiceImpl>();
 builder.Services.AddScoped<ISubForumService, SubForumServiceImpl>();
+builder.Services.AddScoped<IPostSerivce, PostServiceImpl>();
+builder.Services.AddScoped<ICommentService, CommentServiceImpl>();
+builder.Services.AddScoped<IVoteService, VoteServiceImpl>();
+
 //db 
-builder.Services.AddScoped<IForumDAO, ForumDAOImpl>();
+//
+builder.Services.AddScoped<ISubForumDAO, SubForumDAOImpl>();
+builder.Services.AddScoped<ICommentDAO, CommentDAOImpl>();
+builder.Services.AddScoped<IPostDAO, PostDAOImpl>();
+builder.Services.AddScoped<IUserDAO, UserDAOImpl>();
+builder.Services.AddScoped<IVoteDAO, VoteDAOImpl>();
+
 builder.Services.AddDbContext<DBContext>();
 
 

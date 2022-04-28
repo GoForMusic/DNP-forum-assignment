@@ -5,6 +5,7 @@
 @using Microsoft.AspNetCore.Components
 
 @inject ISubForumService _subForumService;
+@inject IPostSerivce _postSerivce;
 @inject IUserService _userService
 @inject NavigationManager Navigation
 
@@ -103,9 +104,8 @@
             {
                 _post.WrittenBy = _user;
                 _post.date_posted = DateTime.Today;
-                subForum = await _subForumService.GetElementAsync(Id);
                 subForum.Posts.Add(_post);
-            
+                //await _postSerivce.AddElementAsync(_post);
                 await _subForumService.UpdateElementAsync(subForum);
                 Navigation.NavigateTo("/subforum/"+Id,true);
             }

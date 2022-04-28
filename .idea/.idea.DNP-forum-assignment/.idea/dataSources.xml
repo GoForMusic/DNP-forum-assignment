@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="Forum" uuid="23847c24-868e-463a-825d-fad1cea2f790">
+    <data-source source="LOCAL" name="Forum [2]" uuid="c55efa38-877e-4139-ac8f-e5ecc10b0032">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:C:\Users\ACM\RiderProjects\DNP-forum-assignment\EFCDataAccess\Forum.db</jdbc-url>
+      <jdbc-url>jdbc:sqlite:D:\VIA_Courses\DNP-forum\EFCDataAccess\Forum.db</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
       <libraries>
         <library>

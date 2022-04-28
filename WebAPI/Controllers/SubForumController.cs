@@ -1,7 +1,4 @@
-﻿
-
-using Applicaiton.ServiceImpl;
-using Contracts;
+﻿using Contracts;
 using Entities.Models;
 using Microsoft.AspNetCore.Mvc;
 

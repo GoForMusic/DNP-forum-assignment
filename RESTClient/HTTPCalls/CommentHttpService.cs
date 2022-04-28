@@ -16,7 +16,7 @@ public class CommentHttpService : ICommentService
             {
                 PropertyNameCaseInsensitive = true
             })!;
-            return subForums;
+            return comments;
         }
         catch (Exception e)
         {
@@ -24,17 +24,17 @@ public class CommentHttpService : ICommentService
         }
     }
 
-    public async Task<SubForum> GetElementAsync(string id)
+    public async Task<Comment> GetElementAsync(string id)
     {
         try
         {
-            string content = await ServerAPI.getContent(Methods.Get,$"/subforum/{id}");
+            string content = await ServerAPI.getContent(Methods.Get,$"/comment/{id}");
         
-            SubForum subForum = JsonSerializer.Deserialize<SubForum>(content, new JsonSerializerOptions
+            Comment comment = JsonSerializer.Deserialize<Comment>(content, new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
             })!;
-            return subForum;
+            return comment;
         }
         catch (Exception e)
         {
@@ -42,17 +42,17 @@ public class CommentHttpService : ICommentService
         }
     }
     
-    public async Task<SubForum> AddElementAsync(SubForum subforum)
+    public async Task<Comment> AddElementAsync(Comment commentBody)
     {
         try
         {
-            string content = await ServerAPI.getContent(Methods.Post,"/subforum", subforum);
+            string content = await ServerAPI.getContent(Methods.Post,"/comment", commentBody);
         
-            SubForum localSubForum = JsonSerializer.Deserialize<SubForum>(content, new JsonSerializerOptions
+            Comment comment = JsonSerializer.Deserialize<Comment>(content, new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
             })!;
-            return localSubForum;
+            return comment;
         }
         catch (Exception e)
         {
@@ -64,7 +64,7 @@ public class CommentHttpService : ICommentService
     {
         try
         {
-            string content = await ServerAPI.getContent(Methods.Delete,$"/subforum/{id}");
+            string content = await ServerAPI.getContent(Methods.Delete,$"/comment/{id}");
         }
         catch (Exception e)
         {
@@ -72,11 +72,11 @@ public class CommentHttpService : ICommentService
         }
     }
 
-    public async Task UpdateElementAsync(SubForum subforum)
+    public async Task UpdateElementAsync(Comment comment)
     {
         try
         {
-            string content =  await ServerAPI.getContent(Methods.Patch,"/subforum", subforum);
+            string content =  await ServerAPI.getContent(Methods.Patch,"/comment", comment);
         }
         catch (Exception e)
         {

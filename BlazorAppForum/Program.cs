@@ -18,6 +18,9 @@ builder.Services.AddScoped<IAuthService, AuthServiceImpl>();
 //HTTP services
 builder.Services.AddScoped<IUserService, UserHttpService>();
 builder.Services.AddScoped<ISubForumService, SubForumHttpService>();
+builder.Services.AddScoped<IPostSerivce, PostHttpService>();
+builder.Services.AddScoped<ICommentService, CommentHttpService>();
+builder.Services.AddScoped<IVoteService, VoteHttpService>();
 
 builder.Services.AddAuthorization(options =>
 {
