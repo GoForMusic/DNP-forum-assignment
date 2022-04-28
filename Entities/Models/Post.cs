@@ -5,7 +5,8 @@ namespace Entities.Models;
 
 public class Post
 {
-    [Key] public string Id { get; set; } = RandomIDGenerator.Generate(20);
+    [Key] 
+    public string Id { get; set; } = RandomIDGenerator.Generate(20);
     [Required]
     public string Header { get; set; }
     [Required]

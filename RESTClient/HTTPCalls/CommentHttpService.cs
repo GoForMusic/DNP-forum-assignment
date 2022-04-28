@@ -4,15 +4,15 @@ using Entities.Models;
 
 namespace RESTClient;
 
-public class SubForumHttpService : ISubForumService
+public class CommentHttpService : ICommentService
 {
-    public async Task<ICollection<SubForum>> GetListAsync()
+    public async Task<ICollection<Comment>> GetListAsync()
     {
         try
         {
-            string content = await ServerAPI.getContent(Methods.Get,"/subforum");
+            string content = await ServerAPI.getContent(Methods.Get,"/comment");
         
-            ICollection<SubForum> subForums = JsonSerializer.Deserialize<ICollection<SubForum>>(content, new JsonSerializerOptions
+            ICollection<Comment> comments = JsonSerializer.Deserialize<ICollection<Comment>>(content, new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
             })!;
@@ -42,24 +42,6 @@ public class SubForumHttpService : ISubForumService
         }
     }
     
-    public async Task<SubForum> GetSubForumByFilter(string id, string title)
-    {
-        try
-        {
-            string content = await ServerAPI.getContent(Methods.Get,$"/subforum/{id}?title={title}");
-        
-            SubForum subForum = JsonSerializer.Deserialize<SubForum>(content, new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            })!;
-            return subForum;
-        }
-        catch (Exception e)
-        {
-            throw new Exception(e.Message);
-        }
-    }
-
     public async Task<SubForum> AddElementAsync(SubForum subforum)
     {
         try
