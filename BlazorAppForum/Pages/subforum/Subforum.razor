@@ -252,7 +252,7 @@ else
             {
                 Vote local = new Vote();
                 local.Voter = _user;
-                local.PostId = Id;
+                local.PostId = item.Id;
                 local.CommentId = null;
                 item.Votes.Add(local);
                 await _VoteService.AddElementAsync(local);
