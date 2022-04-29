@@ -77,7 +77,7 @@ public class VoteController : ControllerBase
     
     //create
     [HttpPost]
-    public async Task<ActionResult<Vote>> AddSubForum([FromBody] Vote vote)
+    public async Task<ActionResult<Vote>> AddVote([FromBody] Vote vote)
     {
         try
         {

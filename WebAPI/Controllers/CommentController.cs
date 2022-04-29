@@ -77,7 +77,7 @@ public class CommentController : ControllerBase
     
     //create
     [HttpPost]
-    public async Task<ActionResult<Comment>> AddSubForum([FromBody] Comment comment)
+    public async Task<ActionResult<Comment>> AddComment([FromBody] Comment comment)
     {
         try
         {
