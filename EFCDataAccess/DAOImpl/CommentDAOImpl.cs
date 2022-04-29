@@ -72,7 +72,8 @@ public class CommentDAOImpl : ICommentDAO
                 throw new Exception($"Could not find Todo with id {id}. Nothing was deleted");
             }
 
-            _db.Votes.RemoveRange(existing.Votes);
+            ICollection<Vote>? existingvotes = await _db.Votes.Where(t => t.CommentId.Equals(id)).ToListAsync();
+            _db.Votes.RemoveRange(existingvotes);
             _db.Comments.Remove(existing);
             await _db.SaveChangesAsync();
         }catch (Exception e)

@@ -47,7 +47,7 @@ public class PostController : ControllerBase
     
     [HttpDelete]
     [Route("{id}")]
-    public async Task<ActionResult<ICollection<Post>>> DeleteByID([FromRoute] string id)
+    public async Task<ActionResult<ICollection<Post>>> DeleteById([FromRoute] string id)
     {
         try
         {

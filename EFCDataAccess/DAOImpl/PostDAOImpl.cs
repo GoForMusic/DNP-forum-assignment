@@ -70,9 +70,10 @@ public class PostDAOImpl: IPostDAO
                 throw new Exception($"Could not find Todo with id {id}. Nothing was deleted");
             }
 
-            
-            _db.Votes.RemoveRange(existing.Votes);
-            _db.Comments.RemoveRange(existing.Comments);
+            ICollection<Vote>? existingvotes = await _db.Votes.Where(t => t.PostId.Equals(id)).ToListAsync();
+            _db.Votes.RemoveRange(existingvotes);
+            ICollection<Comment>? existingcoComments = await _db.Comments.Where(t => t.PostId.Equals(id)).ToListAsync();
+            _db.Comments.RemoveRange(existingcoComments);
             _db.Posts.Remove(existing);
             await _db.SaveChangesAsync();
         }catch (Exception e)

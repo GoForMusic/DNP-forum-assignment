@@ -48,7 +48,6 @@ public class VoteDAOImpl : IVoteDAO
         try
         {
             Vote added = vote;
-            added = vote;
             added.Voter = await _db.Users.FirstOrDefaultAsync(t=>t.Id.Equals(vote.Voter.Id));
             await _db.Votes.AddAsync(added);
             await _db.SaveChangesAsync();
