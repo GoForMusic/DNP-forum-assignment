@@ -3,7 +3,7 @@ using Contracts;
 using Entities.Models;
 
 namespace RESTClient;
-//das
+//das2
 public class PostHttpService : IPostSerivce
 {
     public async Task<ICollection<Post>> GetListAsync()
