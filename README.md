@@ -1,6 +1,6 @@
 # DNP-forum-assignment
 
-VIA UNIVERSITY DNP1 Assignment 1 made by @Adrian-Cristian Militaru
+VIA UNIVERSITY DNP1 Assignment 1 made by @Adrian-Cristian Militaru 
 
 # Assignment 1
 Minimum requirement
